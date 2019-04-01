@@ -1,0 +1,10 @@
+<div>
+  <div class="card" [@flipState]="flip ? 'inactive' : 'active'" >
+    <p>test</p>
+  </div>
+  <div class="card" [@flipState]="flip ? 'active' : 'inactive'" >
+    <p>asdkja asdkajsd asdklasd</p>
+  </div>
+</div>
+
+<button (click)="toggleFlip()">click</button>

@@ -1,0 +1,9 @@
+.card {
+    background-color: red;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    transform: transform 1s;
+    transform-style: preserve-3d;
+    margin: 50px;
+}

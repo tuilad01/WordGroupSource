@@ -1,0 +1,27 @@
+<div id="flashcard-app" class="container">
+  <h1></h1>
+  <div class="flashcard-form">
+
+    <a class="btn blue" (click)="random()">Random</a>
+    <a class="btn green" (click)="reset()">Reset</a>
+    <a class="btn purple" (click)="save()" *ngIf="dataTemp.length <= 0">Save</a>
+    <a class="btn purple" (click)="dispose()" *ngIf="dataTemp.length > 0">Dispose</a>
+    <a class="btn yellow" (click)="try()" *ngIf="dataTemp.length > 0">Try</a>
+
+    <span class="error" style="display: none;">Oops! Flashcards need a front and a back.</span>
+  </div>
+  
+  <ul class="flashcard-list" >
+    <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display" (click)="flipped(word.id)">
+      <p class="card" >
+        {{ word.flipped ? word.mean : word.name }}
+        <span class="delete-card" (click)="delete(index)">X</span>
+      </p>    
+      <!-- <p class="card">
+        {{ word.flipped ? word.mean : word.name }}
+        <span class="delete-card" (click)="delete(index)">X</span>
+      </p>     -->
+    </li>
+   
+  </ul>
+</div>
