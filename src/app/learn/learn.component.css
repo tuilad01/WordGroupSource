@@ -8,6 +8,7 @@ li {
     list-style-type: none;
     padding: 10px 10px;
     transition: all 0.3s ease;
+    transform-style: preserve-3d;
 }
 
 .container {
@@ -17,9 +18,9 @@ li {
 
 .card {
     display: block;
-    width: 100%;
-    /* height: 175px; */
-    padding: 80px 50px;
+    width: 250px;
+    height: 200px;
+    /* padding: 80px 50px; */
     background-color: #51aae5;
     border-radius: 7px;
     margin: 5px;
@@ -34,11 +35,38 @@ li {
     -moz-box-shadow: 9px 10px 22px -8px rgba(209, 193, 209, .5);
     box-shadow: 9px 10px 22px -8px rgba(209, 193, 209, .5);
     will-change: transform;
+    transform-style: preserve-3d;
 }
 
-li:hover {
+.front {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    
+}
+
+.back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+}
+
+/* li:hover {
     transform: scale(1.1);
 }
+
+li:active {
+    transform: scale(1.1) rotateY(180deg);
+} */
 
 li:nth-child(-n+3) .card {
     background-color: #e65f51;
@@ -71,6 +99,7 @@ li:nth-child(-7n+7) .card {
     padding: 10px 15px;
     opacity: .4;
     transition: all 0.5s ease;
+    backface-visibility: hidden;
 }
 
 .delete-card:hover, .error {
@@ -130,6 +159,7 @@ input {
     -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
 } */
+
 /* .card {
     transform-style: preserve-3d;
     transform: transform 1s;

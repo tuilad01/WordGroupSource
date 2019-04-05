@@ -1,2 +1,17 @@
-<input type="text">
-<a href="/learn">Group All</a>
+<div class="container">
+    <div class="search-box">
+        <input class="search-input" type="text" [(ngModel)]="search">
+        <span class="icon-clear" *ngIf="search" (click)="search = ''">&times;</span>        
+    </div>
+
+    <p class="search-key" *ngIf="search">search key: "{{ search }}"</p>
+
+    <ul class="list">
+        <li><a routerLink="/learn">Group All</a></li>
+        <!-- <li><a routerLink="/learn">Group All</a></li>
+        <li><a routerLink="/learn">Group All</a></li>
+        <li><a routerLink="/learn">Group All</a></li>
+        <li><a routerLink="/learn">Group All</a></li>
+        <li><a routerLink="/learn">Group All</a></li> -->
+    </ul>
+</div>

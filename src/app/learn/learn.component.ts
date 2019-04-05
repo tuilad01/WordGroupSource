@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
       state(
         'active',
         style({
-          transform: 'rotateY(180deg)',
+          transform: 'scale(1.1) rotateY(180deg)',
         })
       ),
       state(
@@ -32,108 +32,6 @@ import { HttpClient } from '@angular/common/http';
 export class LearnComponent implements OnInit {
 
   dataTemp = [];
-
-  // data = [
-  //   {
-  //     id: 1,
-  //     name: "Computer Programmer 1",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Computer Programmer 2",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Computer Programmer 3",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Computer Programmer 4",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Computer Programmer 5",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Computer Programmer 6",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Computer Programmer 7",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Computer Programmer 8",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 9,
-  //     name: "Computer Programmer 9",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 10,
-  //     name: "Computer Programmer 10",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 11,
-  //     name: "Computer Programmer 11",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 12,
-  //     name: "Computer Programmer 12",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 13,
-  //     name: "Computer Programmer 13",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  //   {
-  //     id: 14,
-  //     name: "Computer Programmer 14",
-  //     mean: "Clarke Calculator",
-  //     display: true,
-  //     flipped: false
-  //   },
-  // ];
-
   data = [];
 
   url_word = "https://wordgroup123.herokuapp.com/word";
@@ -194,9 +92,13 @@ export class LearnComponent implements OnInit {
   }
 
   reset() {
+    const firstWord = this.data[0];
+    const flipped = !firstWord.flipped;
+
     for (let i = 0; i < this.data.length; i++) {
       const word = this.data[i];
       word.display = true;
+      word.flipped = flipped;
     }
   }
 
@@ -215,6 +117,9 @@ export class LearnComponent implements OnInit {
   }
 
   try() {
+    const firstWord = this.dataTemp[0];
+    const flipped = !firstWord.flipped;
+
     for (let i = 0; i < this.dataTemp.length; i++) {
       const wordTemp = this.dataTemp[i];
 
@@ -223,6 +128,7 @@ export class LearnComponent implements OnInit {
 
         if (word.id == wordTemp.id) {
           word.display = wordTemp.display;
+          word.flipped = flipped;
           break;
         }
       }

@@ -12,15 +12,18 @@
   </div>
   
   <ul class="flashcard-list" >
-    <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display" (click)="flipped(word.id)">
-      <p class="card" >
-        {{ word.flipped ? word.mean : word.name }}
-        <span class="delete-card" (click)="delete(index)">X</span>
-      </p>    
-      <!-- <p class="card">
-        {{ word.flipped ? word.mean : word.name }}
-        <span class="delete-card" (click)="delete(index)">X</span>
-      </p>     -->
+    <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display" (click)="flipped(word.id)" [@flipState]="word.flipped ? 'active' : 'inactive'">
+      <div class="card">
+        <div class="front">
+            <p>{{ word.name }}</p>
+            <span class="delete-card" (click)="delete(index)">X</span>
+        </div>
+        <div class="back">
+            <p>{{ word.mean }}</p>
+            <span class="delete-card" (click)="delete(index)">X</span>
+        </div>
+      </div>
+    
     </li>
    
   </ul>
