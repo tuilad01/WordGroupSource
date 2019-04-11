@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+.container {
+    width: 80%;
+    margin-top: 20px;
+    margin-left: 10%;
+    text-align: initial;    
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.add-search {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.add-search > i {
+  cursor: pointer;
+}
+.add-search > i:active {
+  text-shadow: 1px 1px 2px rgba(150, 150, 150, 1);
+}
+
+.group {
+    display: grid;
+    grid-template-rows: 1fr;
+    margin-top: 20px;
+}
+
+.input-group {
+    width: 100%;
+    height: 60px;
+    position: relative;
+}
+
+.input-group > input {
+    width: 100%;
+    position: absolute;
+    /* padding: 0.75em 1em; */
+    padding: 10px;
+    border: 3px solid #ed1c40;
+    border-radius: 0.25rem;
+    /* font-size: 1.25em; */
+    outline: none;
+    letter-spacing: 2px;
+    height: 50px;
+}
+
+.icon-clear {
+  position: absolute;
+  display: block;
+  top: 8px;
+  right: 6px;
+  font-size: 22px;
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
+  background: #ed1c40;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  opacity: 0.5;
+}
+
+.icon-clear:hover {
+    opacity: 0.7;
+}
+
+.button-close {
+  background: #ed1c40;
+  color: #fff;
+  padding: 13px;
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+.button-close:active {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+table {
+    text-align: left;
+    line-height: 40px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 2px solid #ed1c40;
+    width: 100%;
+    margin: 20px auto;
+    border-radius: .25rem;
+  }
+  
+  thead tr:first-child {
+    background: #ed1c40;
+    color: #fff;
+    border: none;
+  }
+  
+  th:first-child,
+  td:first-child {
+    padding: 0 15px 0 10px;
+  }
+  
+  th {
+    font-weight: 500;
+  }
+  
+  thead tr:last-child th {
+    border-bottom: 3px solid #ddd;
+  }
+  
+  tbody tr:hover {
+    background-color: #f2f2f2;
+    cursor: default;
+  }
+  
+  tbody tr:last-child td {
+    border: none;
+  }
+  
+  tbody td {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* td:last-child {
+    text-align: right;
+    padding-right: 10px;
+  } */
+  
+  .button {
+    color: #aaa;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-top: -4px;
+  }
+  
+  .edit:hover {
+    color: #0a79df;
+  }
+  
+  .delete:hover {
+    color: #dc2a2a;
+  }
+
+  .search {
+    color: #fff;
+  }
+  
+@media (min-width: 768px) {
+    .group {        
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-column-gap: 20px;
+    }
+
+    table{
+        width: 500px;
+    }
+}

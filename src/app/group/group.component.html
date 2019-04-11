@@ -1,0 +1,124 @@
+<div class="container">
+
+
+  <div class="add-search">
+    <i (click)="controls.add = true"> {{ controls.add ? '' : 'Add here' }} </i>
+    <i (click)="controls.map = true">{{ controls.add ? '' : 'Map word' }}</i>
+    <i (click)="controls.search = true">{{ controls.search ? '' : 'Search here' }}</i>
+  </div>
+
+  <section class="group" *ngIf="controls.add">
+    <div class="input-group">
+      <input type="text" placeholder="Group name..." [(ngModel)]="group.name">
+      <span class="icon-clear" *ngIf="group.name !== ''" (click)="group.name = ''">&times;</span>
+    </div>
+    <div class="input-group">
+      <input type="text" placeholder="Group description..." [(ngModel)]="group.description">
+      <span class="icon-clear" *ngIf="group.description !== ''" (click)="group.description = ''">&times;</span>
+    </div>
+    <div class="input-group">
+      <input type="text" placeholder="Words reference..." [(ngModel)]="group.words">
+      <span class="icon-clear" *ngIf="group.words !== ''" (click)="group.words = ''">&times;</span>
+    </div>
+    <div>
+        <button class="button-close" (click)="submitGroup()">Add new</button>
+    </div>
+    <div>      
+      <button class="button-close" (click)="controls.add = false">Close add</button>
+    </div>
+  </section>
+
+  <section class="group" *ngIf="controls.search">
+    <div class="input-group">
+      <input type="text" placeholder="Name" [(ngModel)]="search.name">
+      <span class="icon-clear" *ngIf="search.name !== ''" (click)="search.name = ''">&times;</span>
+    </div>
+    <div class="input-group">
+      <input type="text" placeholder="From date" [(ngModel)]="search.fromdate" onfocus="this.type = 'date'"
+        onblur="this.type = 'text'">
+    </div>
+    <div class="input-group">
+      <input type="text" placeholder="To date" [(ngModel)]="search.todate" onfocus="this.type = 'date'"
+        onblur="this.type = 'text'">
+    </div>
+    <div>
+      <button class="button-close" (click)="controls.search = false">Close search</button>
+    </div>
+  </section>
+
+  <section class="list-group">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="3">Group</th>
+        </tr>
+        <tr>
+          <th>#</th>
+          <th colspan="2">Atividade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let group of dataGroups; let index = index">
+          <td> {{ index + 1 }} </td>
+          <td>{{ group.name }}</td>
+          <td>
+            <i class="material-icons button edit">edit</i>
+            <i class="material-icons button delete">delete</i>
+          </td>
+        </tr>
+      
+      </tbody>
+    </table>
+  </section>
+  <section *ngIf="controls.map">
+
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Word</th>
+          <th><i class="material-icons button search">search</i></th>
+
+        </tr>
+
+        <!-- <tr>
+          <td colspan="3">
+            <input type="text">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <input type="text">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <input type="text">
+          </td>
+        </tr> -->
+        <tr>
+            <td colspan="3">
+              <label for="">
+                  <input type="checkbox">
+                   Not in group
+              </label>
+            </td>
+          </tr>
+
+        <tr>
+          <th><input type="checkbox" (click)="selectAll($event)"></th>
+          <th colspan="2">Check all</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let word of dataWords; let index = index">
+          <td><input type="checkbox" [(ngModel)]="word.selected"></td>
+          <td>{{ word.name }}</td>
+          <td>
+          </td>
+        </tr>      
+      </tbody>
+    </table>
+
+    <button class="button-close">Mapping</button>
+  </section>
+</div>

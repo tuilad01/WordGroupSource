@@ -1,9 +1,14 @@
+
+{{ flip ? 'inactive' : 'active' }}
+
 <div>
-  <div class="card" [@flipState]="flip ? 'inactive' : 'active'" >
-    <p>test</p>
-  </div>
-  <div class="card" [@flipState]="flip ? 'active' : 'inactive'" >
-    <p>asdkja asdkajsd asdklasd</p>
+  <div class="card" [@flipState]="flip ? 'inactive' : 'active'">
+    <div class="front">
+      <p>front</p>
+    </div>
+    <div class="back">
+      <p>back</p>
+    </div>
   </div>
 </div>
 

@@ -10,10 +10,12 @@ import { SearchComponent } from './search/search.component';
 import { LearnComponent } from './learn/learn.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { TestanimationComponent } from './testanimation/testanimation.component';
+import { WordComponent } from './word/word.component';
+import { GroupComponent } from './group/group.component';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
-  { path: 'learn', component: LearnComponent },
+  { path: 'learn/:id', component: LearnComponent },
   {
     path: '',
     redirectTo: '/search',
@@ -29,7 +31,9 @@ const appRoutes: Routes = [
     SearchComponent,
     LearnComponent,
     PagenotfoundComponent,
-    TestanimationComponent
+    TestanimationComponent,
+    WordComponent,
+    GroupComponent
   ],
   imports: [
     BrowserModule,

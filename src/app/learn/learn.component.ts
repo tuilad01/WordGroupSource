@@ -3,8 +3,10 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-
+import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+
+import { environment } from './../../environments/environment';
 
 @Component({
   selector: 'app-learn',
@@ -21,7 +23,7 @@ import { HttpClient } from '@angular/common/http';
       state(
         'inactive',
         style({
-          transform: 'rotateY(0)',
+          transform: 'scale(1.0) rotateY(0)',
         })
       ),
       transition('active => inactive', animate('400ms ease-out')),
@@ -34,29 +36,44 @@ export class LearnComponent implements OnInit {
   dataTemp = [];
   data = [];
 
-  url_word = "https://wordgroup123.herokuapp.com/word";
-  //url_word = "http://localhost:4000/word";
+  temp = "";
 
-  constructor(private http: HttpClient) { }
+  url_word = environment.baseUrl + "/word";
+  url_group = environment.baseUrl + "/group";
+
+  constructor(private http: HttpClient,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.getWords().subscribe(words => {
-      this.data = words.map(word => {
-        return {
-          id: word._id,
-          name: word.name,
-          mean: word.mean,
-          display: true,
-          flipped: false,
-        }
-      })
-    });;
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if(id) {
+      this.getGroup(id).subscribe(group => {
+        this.data = group[0]["words"].map(word => {
+          return {
+            id: word._id,
+            name: word.name,
+            mean: word.mean,
+            display: true,
+            flipped: false,
+          }
+        })
+      });
+    }    
+  }
+
+  getGroup(id): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url_group}?id=${id}`)
+      .pipe(
+        tap(group => this.log(`get Group by id`)),
+        catchError(this.handleError('getGroup', []))
+      );
   }
 
   getWords(): Observable<any[]> {
     return this.http.get<any[]>(this.url_word)
       .pipe(
-        tap(heroes => this.log(`fetched Words`)),
+        tap(word => this.log(`fetched Words`)),
         catchError(this.handleError('getWords', []))
       );
   }
