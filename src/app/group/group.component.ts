@@ -47,7 +47,17 @@ export class GroupComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.getGroups().subscribe(groups => this.dataGroups = groups);
+    this.getGroups().subscribe(groups => {
+      this.dataGroups = groups.map(grp => {
+        return {
+          _id: grp._id,
+          name: grp.name,
+          description: grp.description,
+          words: grp.words,
+          selected: false
+        };
+      })
+    });
     this.getWords().subscribe(words => {
       this.dataWords = words.map(wrd => {
         return {
@@ -61,6 +71,11 @@ export class GroupComponent implements OnInit {
       console.log(this.dataWords);
       return this.dataWords;
     });
+  }
+
+  selectGroup (obj) {
+    this.dataGroups.map(group => group.selected = false);
+    obj.selected = true;
   }
 
   selectAll (event) {
@@ -77,6 +92,35 @@ export class GroupComponent implements OnInit {
         }
       })
     });;
+  }
+
+  mapping() {
+    const group = this.dataGroups.find(group => group.selected === true);
+    const words = this.dataWords.filter(word => word.selected === true);
+ 
+    if ( !group || !group._id) {
+      return false;
+    }
+
+    if ( !words || !words.length || words.length <= 0 ) {
+      return false;
+    }
+
+    const data = {
+      _id: group._id,
+      words: words.map(wrd => wrd._id)
+    }
+
+    this.linkGroup(data).subscribe(response => {
+      console.log(response);
+    })
+  }
+
+  linkGroup(data) : Observable<any> {
+    return this.http.put<any>(this.url_word + "/linkgroup", data, httpOptions).pipe(
+      tap(group => this.log(`group linkGroup`)),
+      catchError(this.handleError<any>('linkGroup'))
+    );
   }
 
   addGroup(): Observable<any> {

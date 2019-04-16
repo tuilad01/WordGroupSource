@@ -3,7 +3,7 @@
 
   <div class="add-search">
     <i (click)="controls.add = true"> {{ controls.add ? '' : 'Add here' }} </i>
-    <i (click)="controls.map = true">{{ controls.add ? '' : 'Map word' }}</i>
+    <i (click)="controls.map = true">{{ controls.map ? '' : 'Map word' }}</i>
     <i (click)="controls.search = true">{{ controls.search ? '' : 'Search here' }}</i>
   </div>
 
@@ -58,7 +58,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let group of dataGroups; let index = index">
+        <tr *ngFor="let group of dataGroups; let index = index" [class.selected]="group.selected" (click)="selectGroup(group)">
           <td> {{ index + 1 }} </td>
           <td>{{ group.name }}</td>
           <td>
@@ -119,6 +119,11 @@
       </tbody>
     </table>
 
-    <button class="button-close">Mapping</button>
+    <div>
+      <button class="button-close" (click)="mapping()">Mapping</button>
+    </div>
+    <div>
+      <button class="button-close" (click)="controls.map = false">Close map</button>
+    </div>
   </section>
 </div>
