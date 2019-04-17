@@ -6,6 +6,9 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
 import { group } from '@angular/animations';
 
+import { GroupService } from './../group.service';
+import { WordService } from './../word.service';
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -44,32 +47,18 @@ export class GroupComponent implements OnInit {
 
   dataGroups = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private groupService: GroupService,
+    private wordService: WordService
+    ) { }
 
   ngOnInit() {
-    this.getGroups().subscribe(groups => {
-      this.dataGroups = groups.map(grp => {
-        return {
-          _id: grp._id,
-          name: grp.name,
-          description: grp.description,
-          words: grp.words,
-          selected: false
-        };
-      })
+    this.groupService.getGroups().subscribe(groups => {
+      this.dataGroups = groups;
     });
-    this.getWords().subscribe(words => {
-      this.dataWords = words.map(wrd => {
-        return {
-            _id: wrd._id,
-           name: wrd.name,
-           meam: wrd.mean,
-           groups: wrd.groups,
-           selected: false
-        };
-      });
-      console.log(this.dataWords);
-      return this.dataWords;
+    this.wordService.getWords().subscribe(words => {
+      this.dataWords = words;
     });
   }
 
@@ -85,7 +74,7 @@ export class GroupComponent implements OnInit {
   submitGroup () {
     if ( !group.name ) return false;
 
-    this.addGroup().subscribe(group => {
+    this.groupService.addGroup(this.group).subscribe(group => {
       group.saved.map(gr => {
         if (gr) {
           this.dataGroups.push(gr);
@@ -109,79 +98,6 @@ export class GroupComponent implements OnInit {
     const data = {
       _id: group._id,
       words: words.map(wrd => wrd._id)
-    }
-
-    this.linkGroup(data).subscribe(response => {
-      if(response.error.length > 0) {
-        return alert("Error");
-      }
-      
-
-    })
-  }
-
-  linkGroup(data) : Observable<any> {
-    return this.http.put<any>(this.url_word + "/linkgroup", data, httpOptions).pipe(
-      tap(group => this.log(`group linkGroup`)),
-      catchError(this.handleError<any>('linkGroup'))
-    );
-  }
-
-  addGroup(): Observable<any> {
-    return this.http.post<any>(this.url_group, this.group, httpOptions).pipe(
-      tap(group => group.saved.map(gr => this.log(`added group w/ id=${gr._id}`))),
-      catchError(this.handleError<any>('addGroup'))
-    );
-  }
-
-  getGroups(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.url_group}`)
-      .pipe(
-        tap(group => this.log(`get Groups`)),
-        catchError(this.handleError('getGroups', []))
-      );
-  }
-
-  getGroup(id): Observable<any[]> {
-    return this.http.get<any[]>(`${this.url_group}?id=${id}`)
-      .pipe(
-        tap(group => this.log(`get Group by id`)),
-        catchError(this.handleError('getGroup', []))
-      );
-  }
-
-  getWords(): Observable<any[]> {
-    return this.http.get<any[]>(this.url_word)
-      .pipe(
-        tap(word => this.log(`fetched Words`)),
-        catchError(this.handleError('getWords', []))
-      );
-  }
-
-
-   /**
-     * Handle Http operation that failed.
-     * Let the app continue.
-     * @param operation - name of the operation that failed
-     * @param result - optional value to return as the observable result
-     */
-    private handleError<T>(operation = 'operation', result?: T) {
-      return (error: any): Observable<T> => {
-  
-        // TODO: send the error to remote logging infrastructure
-        //console.error(error); // log to console instead
-  
-  
-        // TODO: better job of transforming error for user consumption
-        this.log(`${operation} failed: ${error.message}`);
-  
-        // Let the app keep running by returning an empty result.
-        return of(result as T);
-      };
-    }
-  
-    /** Log a HeroService message with the MessageService */
-    private log(message: string) {
-      console.log(message);
-    }
+    }   
+  } 
 }
