@@ -58,6 +58,13 @@ export class WordService {
 
   //////// Save methods //////////
 
+  linkGroup(data) : Observable<any> {
+    return this.http.put<any>(this.wordUrl + "/linkgroup", data, httpOptions).pipe(
+      tap(group => this.log(`group linkGroup`)),
+      catchError(this.handleError<any>('linkGroup'))
+    );
+  }
+
   /** POST: add a new word to the server */
   addWord (word: Word): Observable<Word> {
     return this.http.post<Word>(this.wordUrl, word, httpOptions).pipe(

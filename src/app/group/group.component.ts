@@ -8,6 +8,7 @@ import { group } from '@angular/animations';
 
 import { GroupService } from './../group.service';
 import { WordService } from './../word.service';
+import { Group } from '../group';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -20,11 +21,7 @@ const httpOptions = {
 })
 export class GroupComponent implements OnInit {
 
-  group = {
-    name: "",
-    description: "",
-    words: ""
-  }
+  group: Group;
 
   search = {
     name: "",
@@ -72,7 +69,7 @@ export class GroupComponent implements OnInit {
   }
 
   submitGroup () {
-    if ( !group.name ) return false;
+    if ( !this.group.name ) return false;
 
     this.groupService.addGroup(this.group).subscribe(group => {
       group.saved.map(gr => {

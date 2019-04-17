@@ -7,6 +7,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { Group } from './group';
 import { Word } from './word';
+import { ResultResponse } from './resultResponse';
 
 import { MessageService } from './message.service';
 
@@ -62,10 +63,10 @@ export class GroupService {
   //////// Save methods //////////
 
   /** POST: add a new group to the server */
-  addGroup (group: Group): Observable<Group> {
-    return this.http.post<Group>(this.groupUrl, group, httpOptions).pipe(
-      tap((group: Group) => this.log(`added group w/ id=${group._id}`)),
-      catchError(this.handleError<Group>('addGroup'))
+  addGroup (group: Group): Observable<ResultResponse> {
+    return this.http.post<ResultResponse>(this.groupUrl, group, httpOptions).pipe(
+      tap((response: ResultResponse) => this.log(`added group w/ groups: ${response.saved.map((group: Group) => group.name).join(', ')}`)),
+      catchError(this.handleError<ResultResponse>('addGroup'))
     );
   }
 
