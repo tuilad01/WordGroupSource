@@ -112,7 +112,11 @@ export class GroupComponent implements OnInit {
     }
 
     this.linkGroup(data).subscribe(response => {
-      console.log(response);
+      if(response.error.length > 0) {
+        return alert("Error");
+      }
+      
+
     })
   }
 
