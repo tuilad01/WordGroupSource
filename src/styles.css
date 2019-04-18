@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    text-align: center;
+    /* text-align: center; */
 }
 
 .btn {
@@ -81,4 +81,15 @@ body {
 
 .yellow:hover {
     background-color: #FFDE29;
+}
+
+.container {
+    padding: 10px;
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 600px;
+        margin: 10px auto;
+    }
 }

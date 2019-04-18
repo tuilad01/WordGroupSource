@@ -16,6 +16,8 @@ import { GroupComponent } from './group/group.component';
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'learn/:id', component: LearnComponent },
+  { path: 'group', component: GroupComponent },
+  { path: 'word', component: WordComponent },
   {
     path: '',
     redirectTo: '/search',
