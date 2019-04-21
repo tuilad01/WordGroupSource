@@ -5,9 +5,11 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Word } from './word';
+import { Request } from './request';
 import { MessageService } from './message.service';
 
 import { environment } from './../environments/environment';
+import { ResultResponse } from './resultResponse';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -27,10 +29,13 @@ export class WordService {
   ) { }
 
   /** GET words from the server */
-  getWords (): Observable<Word[]> {
-    return this.http.get<Word[]>(this.wordUrl)
+  getWords (request: Request = null): Observable<Word[]> {
+    const param = request.paramsUrl();
+    const url = param ? `${this.wordUrl}?${param}` : this.wordUrl;
+    
+    return this.http.get<Word[]>(url)
       .pipe(
-        tap(words => this.log('fetched words')),
+        tap(_ => this.log('fetched words')),
         catchError(this.handleError('getWords', []))
       );
   }
@@ -60,27 +65,34 @@ export class WordService {
 
   linkGroup(data) : Observable<any> {
     return this.http.put<any>(this.wordUrl + "/linkgroup", data, httpOptions).pipe(
-      tap(group => this.log(`group linkGroup`)),
+      tap(_ => this.log(`group linkGroup`)),
       catchError(this.handleError<any>('linkGroup'))
     );
   }
 
   /** POST: add a new word to the server */
-  addWord (word: Word): Observable<Word> {
-    return this.http.post<Word>(this.wordUrl, word, httpOptions).pipe(
-      tap((word: Word) => this.log(`added word w/ id=${word._id}`)),
-      catchError(this.handleError<Word>('addWord'))
+  addWord (word: Word): Observable<ResultResponse> {
+    return this.http.post<ResultResponse>(this.wordUrl, word, httpOptions).pipe(
+      tap(_ => this.log(`added word`)),
+      catchError(this.handleError<ResultResponse>('addWord'))
     );
   }
 
   /** DELETE: delete the word from the server */
-  deleteWord (word: Word | string): Observable<Word> {
+  deleteWord (word: Word | string): Observable<ResultResponse> {
     const id = typeof word === 'string' ? word : word._id;
-    const url = `${this.wordUrl}/?id=${id}`;
+    // const url = `${this.wordUrl}/?id=${id}`;
 
-    return this.http.delete<Word>(url, httpOptions).pipe(
+    const option = {
+      headers: httpOptions.headers,
+      body: {
+        _id: id
+      }
+    };
+
+    return this.http.delete<ResultResponse>(this.wordUrl, option).pipe(
       tap(_ => this.log(`deleted word id=${id}`)),
-      catchError(this.handleError<Word>('deleteWord'))
+      catchError(this.handleError<ResultResponse>('deleteWord'))
     );
   }
 

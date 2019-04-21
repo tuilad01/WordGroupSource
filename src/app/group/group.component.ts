@@ -54,9 +54,9 @@ export class GroupComponent implements OnInit {
     this.groupService.getGroups().subscribe(groups => {
       this.dataGroups = groups;
     });
-    this.wordService.getWords().subscribe(words => {
-      this.dataWords = words;
-    });
+    // this.wordService.getWords().subscribe(words => {
+    //   this.dataWords = words;
+    // });
   }
 
   selectGroup (obj) {

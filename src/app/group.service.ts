@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Group } from './group';
+import { Request } from './request';
 import { Word } from './word';
 import { ResultResponse } from './resultResponse';
 
@@ -31,8 +32,11 @@ export class GroupService {
   ) { }
 
   /** GET Group from the server */
-  getGroups (): Observable<Group[]> {
-    return this.http.get<Group[]>(this.groupUrl)
+  getGroups (request: Request = null): Observable<Group[]> {
+    const param = request.paramsUrl();
+    const url = param ? `${this.groupUrl}?${param}` : this.groupUrl;
+
+    return this.http.get<Group[]>(url)
       .pipe(
         tap(groups => this.log('fetched groups')),
         catchError(this.handleError('getGroups', []))
@@ -61,6 +65,13 @@ export class GroupService {
   }
 
   //////// Save methods //////////
+
+  linkWord(data) : Observable<any> {
+    return this.http.put<any>(this.groupUrl + "/linkword", data, httpOptions).pipe(
+      tap(_ => this.log(`word linkWord`)),
+      catchError(this.handleError<any>('linkWord'))
+    );
+  }
 
   /** POST: add a new group to the server */
   addGroup (group: Group): Observable<ResultResponse> {

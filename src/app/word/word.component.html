@@ -8,43 +8,66 @@
         </div>
     </div>
 
+    <!-- LIST WORD -->
+
     <ul class="list">
         <li class="thead">
-            <div [class.expend]="checkAll">
+            <div [class.expend]="controlsWord.checkAll">
                 <div>
-                    <i class="material-icons button-icon" *ngIf="!checkAll"
-                        (click)="toggleCheckAll(true)">check_box_outline_blank</i>
-                    <i class="material-icons button-icon" *ngIf="checkAll" (click)="toggleCheckAll(false)">check_box</i>
+                    <i class="material-icons button-icon" *ngIf="!controlsWord.checkAll"
+                        (click)="toggleCheckAllWord(true)">check_box_outline_blank</i>
+                    <i class="material-icons button-icon" *ngIf="controlsWord.checkAll"
+                        (click)="toggleCheckAllWord(false)">check_box</i>
                 </div>
                 <div>
                     <p>Commodo elit</p>
                 </div>
                 <div>
-                    <i class="material-icons button-icon button-icon-clickable" *ngIf="checkAll">delete</i>
-                    <i class="material-icons button-icon button-icon-clickable" [class.margin-left-1]="checkAll" (click)="search()">search</i>
-                    <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="add()">add</i>
-                    <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="map()">expand_more</i>
+                    <i class="material-icons button-icon button-icon-clickable" *ngIf="controlsWord.checkAll"
+                        (click)="delete()">delete</i>
+                    <i class="material-icons button-icon button-icon-clickable"
+                        [class.margin-left-1]="controlsWord.checkAll"
+                        (click)="controlsWord.search = !controlsWord.search">search</i>
+                    <i class="material-icons button-icon button-icon-clickable margin-left-1"
+                        (click)="toggleAdd(!controlsWord.add)">add</i>
+                    <i class="material-icons button-icon button-icon-clickable margin-left-1"
+                        (click)="controlsWord.map = !controlsWord.map">expand_more</i>
                     <!-- <i class="material-icons button-icon button-icon-clickable float-right">done_outline</i>
                     <i class="material-icons button-icon button-icon-clickable float-right bold">delete</i> -->
                 </div>
             </div>
         </li>
-        <!-- <li class="thead-second">
-                    <div>
-                            <input type="text" class="textbox" placeholder="Search..."> 
-                    </div>
-                </li> -->
-        <!-- <li class="thead-second">
-                    <div>
-                        <input type="text" class="textbox" placeholder="Name">
-                        <input type="text" class="textbox" placeholder="Description">
-                        <div class="element-right">
-                            <button class="button">Add</button>
-                            <button class="button">Cancel</button>
-                        </div>
-                    </div>
-                </li> -->
-        <li *ngFor="let word of data; let index = index" (click)="word.selected = !word.selected">
+        <li class="thead-second" *ngIf="controlsWord.search">
+            <div>
+                <input type="text" class="textbox" placeholder="Search..."
+                    [(ngModel)]="strSearchWord" (keyup.enter)="searchWord()">
+            </div>
+        </li>
+        <li class="thead-second" *ngIf="controlsWord.add">
+            <div>
+                <input #textBoxName type="text" class="textbox" placeholder="Name..."
+                    [(ngModel)]="formAdd.name">
+                <input type="text" class="textbox" placeholder="Mean..."
+                    [(ngModel)]="formAdd.mean">
+                <div class="element-right">
+                    <button class="button" (click)="add()">Add</button>
+                    <button class="button" (click)="toggleAdd(false)">Cancel</button>
+                </div>
+            </div>
+        </li>
+        <li class="thead-second" *ngIf="controlsWord.edit">
+            <div>
+                <input #textBoxName type="text" class="textbox" placeholder="Name..."
+                    [(ngModel)]="formEdit.name">
+                <input type="text" class="textbox" placeholder="Mean..."
+                    [(ngModel)]="formEdit.mean">
+                <div class="element-right">
+                    <button class="button" (click)="edit()">Update</button>
+                    <button class="button" (click)="controlsWord.edit = false">Cancel</button>
+                </div>
+            </div>
+        </li>
+        <li *ngFor="let word of data; let index = index" (click)="select(word)">
             <div>
                 <div>
                     <i class="material-icons" *ngIf="word.selected">check</i>
@@ -54,12 +77,123 @@
                     <i>{{ word.mean }}</i>
                 </div>
                 <div *ngIf="word.selected">
-                    <i class="material-icons button-icon button-icon-clickable" (click)="edit(); $event.stopPropagation()">edit</i>
-                    <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="delete(); $event.stopPropagation()">delete</i>
-                    <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="more(); $event.stopPropagation()">more_horiz</i>
+                    <i class="material-icons button-icon button-icon-clickable"
+                        (click)="showEdit(word); $event.stopPropagation()">edit</i>
+                    <i class="material-icons button-icon button-icon-clickable margin-left-1"
+                        (click)="delete(word); $event.stopPropagation()">delete</i>
+                    <i class="material-icons button-icon button-icon-clickable margin-left-1"
+                        (click)="controlsWord.more = !controlsWord.more; $event.stopPropagation()">more_horiz</i>
                 </div>
             </div>
         </li>
+    </ul> <!-- END LIST WORD -->
 
-    </ul>
+
+    <!-- LIST GROUP -->
+
+    <ul class="list margin-top-2" *ngIf="controlsWord.more">
+        <li class="thead">
+            <div [class.expend]="controlsGroup.checkAll">
+                <div>
+                    <i class="material-icons button-icon" *ngIf="!controlsGroup.checkAll"
+                        (click)="toggleCheckAllGroup(true)">check_box_outline_blank</i>
+                    <i class="material-icons button-icon" *ngIf="controlsGroup.checkAll"
+                        (click)="toggleCheckAllGroup(false)">check_box</i>
+                </div>
+                <div>
+                    <p>{{ activeWord && activeWord.name ? activeWord.name : "Please choose any word" }}</p>
+                </div>
+                <div>
+                    <i class="material-icons button-icon button-icon-clickable float-right"
+                        [class.margin-left-1]="controlsGroup.checkAll"
+                        (click)="controlsGroup.search = !controlsGroup.search">search</i>
+                    <i class="material-icons button-icon button-icon-clickable float-right"
+                        *ngIf="controlsGroup.checkAll" (click)="delete()">delete</i>
+
+                    <!-- <i class="material-icons button-icon button-icon-clickable float-right">done_outline</i>
+                    <i class="material-icons button-icon button-icon-clickable float-right bold">delete</i> -->
+                </div>
+            </div>
+        </li>
+        <li class="thead-second" *ngIf="controlsGroup.search">
+            <div>
+                <input type="text" class="textbox" placeholder="Search...">
+            </div>
+        </li>
+        <li class="thead-second" *ngIf="controlsGroup.add">
+            <div>
+                <input type="text" class="textbox" placeholder="Name">
+                <input type="text" class="textbox" placeholder="Description">
+                <div class="element-right">
+                    <button class="button" click="add()">Add</button>
+                    <button class="button" (click)="controlsGroup.add = false">Cancel</button>
+                </div>
+            </div>
+        </li>
+        <li *ngFor="let group of activeWord.groups; let index = index" (click)="group.selected = !group.selected">
+            <div>
+                <div>
+                    <i class="material-icons" *ngIf="group.selected">check</i>
+                </div>
+                <div>
+                    <p>{{ group.name }}</p>
+                    <i>{{ group.description }}</i>
+                </div>
+                <div *ngIf="group.selected">
+                    <!-- <i class="material-icons button-icon button-icon-clickable margin-left-1 float-right"
+                        (click)="linkGroup(group._id); $event.stopPropagation()">link</i> -->
+                    <i class="material-icons button-icon button-icon-clickable float-right"
+                        (click)="exclude(); $event.stopPropagation()">close</i>
+                </div>
+            </div>
+        </li>
+    </ul> <!-- END LIST GROUP -->
+
+    <!-- LIST GROUP MAP -->
+
+    <ul class="list margin-top-2" *ngIf="controlsWord.map">
+            <li class="thead">
+                <div>
+                    <div>
+                        <i class="material-icons button-icon" *ngIf="!controlsGroupMap.checkAll"
+                            (click)="toggleCheckAllGroupMap(true)">check_box_outline_blank</i>
+                        <i class="material-icons button-icon" *ngIf="controlsGroupMap.checkAll"
+                            (click)="toggleCheckAllGroupMap(false)">check_box</i>
+                    </div>
+                    <div>
+                        <p>{{ activeWord && activeWord.name ? activeWord.name : "Please choose any word" }}</p>
+                    </div>
+                    <div>                        
+                        <i class="material-icons button-icon button-icon-clickable"
+                            (click)="controlsGroupMap.search = !controlsGroupMap.search">search</i>
+                     
+                            <i class="material-icons button-icon button-icon-clickable margin-left-1 bold">close</i>
+                            <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="map()">done_outline</i>
+                    </div>
+                </div>
+            </li>
+            <li class="thead-second" *ngIf="controlsGroupMap.search">
+                <div>
+                    <input type="text" class="textbox" placeholder="Search..."
+                        [(ngModel)]="strSearchGroup" (keyup.enter)="searchGroup()">
+                </div>
+            </li>         
+            <li *ngFor="let group of dataGroup; let index = index" (click)="select(group)">
+                <div>
+                    <div>
+                        <i class="material-icons" *ngIf="group.selected">check</i>
+                    </div>
+                    <div>
+                        <p>{{ group.name }}</p>
+                        <i>{{ group.mean }}</i>
+                    </div>
+                    <div *ngIf="group.selected">                  
+                        <i class="material-icons button-icon button-icon-clickable margin-left-1"
+                            (click)="delete(); $event.stopPropagation()">close</i>
+                        <!-- <i class="material-icons button-icon button-icon-clickable margin-left-1"
+                            (click)="$event.stopPropagation()">link</i> -->
+                    </div>
+                </div>
+            </li>
+        </ul> <!-- END LIST GROUP MAP -->
 </div>
