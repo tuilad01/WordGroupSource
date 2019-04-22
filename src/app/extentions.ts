@@ -22,7 +22,7 @@ Date.prototype.toStringDate = function () {
         mm = '0' + mm
     }
 
-    const stringDate = mm + '/' + dd + '/' + yyyy;
+    const stringDate = yyyy + '-' + mm + '-' + dd;
     return stringDate;
 }
 
@@ -34,8 +34,8 @@ Date.prototype.addDays = function (days) {
 String.prototype.queryRequest = function () {
     const request = {
         name: "",
-        fromDate: "",
-        toDate: "",
+        fromdate: "",
+        todate: "",
         childName: "",
         childValue: "",
         notInGroup: false,
@@ -44,7 +44,7 @@ String.prototype.queryRequest = function () {
     const query = this.trim();
 
     const regex_getExtend = /\[(date:|datefrom:|dateto:|groupname:|wordname:|notin)(.+?)\]/gi
-    const regex_query = /(?:\[.+\])?\s?(.+)/gi
+    const regex_query = /(.+)/gi
 
     if (!query) {
       return request;
@@ -60,18 +60,18 @@ String.prototype.queryRequest = function () {
             switch (result[2]) {
               case "today":
                 const now = new Date();
-                request.fromDate = now.toStringDate();
-                request.toDate = now.addDays(1).toStringDate();
+                request.fromdate = now.toStringDate();
+                request.todate = now.addDays(1).toStringDate();
                 break;
               default:
                 break;
             }
             break;
           case "datefrom:":
-            request.fromDate = result[2];
+            request.fromdate = result[2];
             break;
           case "dateto:":
-            request.toDate = result[2];
+            request.todate = result[2];
             break;
           case "groupname:":
             request.childName = "groupname";
@@ -100,11 +100,11 @@ String.prototype.queryRequest = function () {
     } while (result);
 
 
-    const name = regex_query.exec(query);
-    if (name && name[1]) {
-      request.name = name[1];
+    const name = query.replace(/\[(.+?)\]/gi,'').trim();    
+   
+    if (name) {
+      request.name = name;
     }
 
     return request;
 }
-

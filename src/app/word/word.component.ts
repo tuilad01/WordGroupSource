@@ -288,9 +288,11 @@ export class WordComponent implements OnInit {
   }
 
   searchWord() {
-    const request = <Request>this.strSearchWord.queryRequest();
-
-    console.log(request);
+    let request = new Request();
+    const queryRequest = this.strSearchWord.queryRequest();
+    for (const item in queryRequest) {
+      request[item] = queryRequest[item];
+    }
 
     this.wordService.getWords(request).subscribe((response: Word[]) => {
       if (response && response.length) {
