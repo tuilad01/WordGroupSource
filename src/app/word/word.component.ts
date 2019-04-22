@@ -8,8 +8,8 @@ import { Word } from "./../word";
 import { Group } from '../group';
 import { Request } from '../request';
 import { ResultResponse } from '../resultResponse';
-import { query } from '@angular/core/src/render3';
 
+import './../extentions';
 
 @Component({
   selector: 'app-word',
@@ -217,7 +217,7 @@ export class WordComponent implements OnInit {
     request.limit = 10;
     this.wordService.getWords(request).subscribe((response: Word[]) => {
       if (response && response.length) {
-        this.data =  response;
+        this.data = response;
       }
     });
   }
@@ -230,8 +230,8 @@ export class WordComponent implements OnInit {
     newWord.mean = this.formAdd.mean;
 
     this.wordService.addWord(newWord).subscribe((response: ResultResponse) => {
-      
-      if(response && response.error.length > 0) {
+
+      if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
       }
@@ -255,22 +255,22 @@ export class WordComponent implements OnInit {
   }
 
   edit() {
-    if(!this.currentWordEdit) return false;
+    if (!this.currentWordEdit) return false;
 
     this.currentWordEdit.name = this.formEdit.name;
     this.currentWordEdit.mean = this.formEdit.mean;
     this.currentWordEdit.groups = "";
 
     this.wordService.updateWord(this.currentWordEdit).subscribe((response: ResultResponse) => {
-      if(response && response.error.length > 0) {
+      if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
       }
 
       if (response && response.saved.length > 0) {
         const word = this.data.find(d => d._id === response.saved[0]._id);
-        
-        if(word) {
+
+        if (word) {
           word.name = response.saved[0].name;
           word.mean = response.saved[0].mean;
         }
@@ -287,153 +287,26 @@ export class WordComponent implements OnInit {
 
   }
 
-  private queryWord(string): Request {    
-    const request = new Request();
-    const query = string.trim();
-
-    const regex_getDate = /\[date:(.+?)\]/gi
-    const regex_getDateForm = /\[datefrom:(.+?)\]/gi
-    const regex_getDateTo = /\[dateto:(.+?)\]/gi
-    const regex_getName = /\[name:(.+?)\]/gi
-    const regex_getNotInGroup = /\[notingroup\]/gi
-    const regex_query = /[\s](.+)(?!\[.+?\])/gi
-
-    if(!query) {
-      return request;
-    }
-
-    const date = regex_getDate.exec(query);
-
-    if(date && date[1]) {
-      // var now = new Date();
-      // var today 
-
-      // switch(date[1].toLowerCase()) {
-      //   case "today": 
-      //   request.fromDate = 
-      //   request.toDate = dateTo[1];
-      //   break;
-      // }
-    }
-
-    const dateForm = regex_getDateForm.exec(query);
-
-    if(dateForm && dateForm[1]) {
-      request.fromDate = dateForm[1];
-    }
-
-    const dateTo = regex_getDateTo.exec(query);
-
-    if(dateTo && dateTo[1]) {
-      request.toDate = dateTo[1];
-    }
-
-    const name = regex_query.exec(query);
-
-    if(name && name.input) {
-      request.name = name.input;
-    }
-
-    const groupname = regex_getName.exec(query);
-
-    if(groupname && groupname[1]) {
-      request.childName = "groupname";
-      request.childValue = groupname[1];
-    }
-
-    const notInGroup = regex_getNotInGroup.exec(query);
-
-    if(notInGroup && notInGroup[1]) {
-
-    }
-
-    
-    return request;
-  }
-
   searchWord() {
-    const request = this.queryWord(this.strSearchWord);
+    const request = <Request>this.strSearchWord.queryRequest();
+
+    console.log(request);
 
     this.wordService.getWords(request).subscribe((response: Word[]) => {
       if (response && response.length) {
-        this.data =  response;
+        this.data = response;
 
         this.controlsWord.search = false;
       }
     });
   }
 
-  private queryGroup(string): Request {    
-    const request = new Request();
-    const query = string.trim();
-
-    const regex_getDate = /\[date:(.+?)\]/gi
-    const regex_getDateForm = /\[datefrom:(.+?)\]/gi
-    const regex_getDateTo = /\[dateto:(.+?)\]/gi
-    const regex_getName = /\[name:(.+?)\]/gi
-    const regex_getNotInGroup = /\[notingroup\]/gi
-    const regex_query = /[\s](.+)(?!\[.+?\])/gi
-
-    if(!query) {
-      return request;
-    }
-
-    const date = regex_getDate.exec(query);
-
-    if(date && date[1]) {
-      // var now = new Date();
-      // var today 
-
-      // switch(date[1].toLowerCase()) {
-      //   case "today": 
-      //   request.fromDate = 
-      //   request.toDate = dateTo[1];
-      //   break;
-      // }
-    }
-
-    const dateForm = regex_getDateForm.exec(query);
-
-    if(dateForm && dateForm[1]) {
-      request.fromDate = dateForm[1];
-    }
-
-    const dateTo = regex_getDateTo.exec(query);
-
-    if(dateTo && dateTo[1]) {
-      request.toDate = dateTo[1];
-    }
-
-    const name = regex_query.exec(query);
-
-    if(name && name.input) {
-      request.name = name.input;
-    }
-
-    const wordname = regex_getName.exec(query);
-
-    if(wordname && wordname[1]) {
-      request.childName = "wordname";
-      request.childValue = wordname[1];
-    }
-
-    const notInGroup = regex_getNotInGroup.exec(query);
-
-    if(notInGroup && notInGroup[1]) {
-
-    }
-
-    
-    return request;
-  }
-
-
   searchGroup() {
-    const request = this.queryGroup(this.strSearchGroup);
+    const request = <Request>this.strSearchWord.queryRequest();
 
     this.groupService.getGroups(request).subscribe((response: Group[]) => {
       if (response && response.length) {
-        this.dataGroup =  response;
+        this.dataGroup = response;
 
         this.controlsGroupMap.search = false;
       }
@@ -449,14 +322,14 @@ export class WordComponent implements OnInit {
       _id: this.activeWord._id,
       groups: groupSelected.map(group => group._id)
     }
-    
+
     this.groupService.linkWord(data).subscribe((response: ResultResponse) => {
-      if(response && response.error.length > 0) {
+      if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
       }
 
-      if (response && response.saved.length > 0) {  
+      if (response && response.saved.length > 0) {
         this.ngOnInit();
       }
     });
@@ -467,17 +340,17 @@ export class WordComponent implements OnInit {
   }
 
   delete(obj) {
-    if(!obj) return false;
+    if (!obj) return false;
 
     const result = confirm("Are you sure!");
-    if ( result ) {
+    if (result) {
       this.wordService.deleteWord(obj._id).subscribe((response: ResultResponse) => {
-        if(response && response.error.length > 0) {
+        if (response && response.error.length > 0) {
           console.error(response.error);
           alert("something error!");
         }
-  
-        if (response && response.saved.length > 0) {  
+
+        if (response && response.saved.length > 0) {
           this.data = this.data.filter(word => word._id !== obj._id);
         }
       });
@@ -487,7 +360,7 @@ export class WordComponent implements OnInit {
   select(obj) {
     obj.selected = !obj.selected;
 
-    if (obj.selected) {      
+    if (obj.selected) {
       if (obj.groups && obj.groups instanceof Array) { // Check obj instance of Word
         this.activeWord = obj;
       }
@@ -495,7 +368,7 @@ export class WordComponent implements OnInit {
       this.activeWord = new Word();
     }
   }
- 
+
   toggleAdd(value: boolean) {
     this.controlsWord.add = value;
 
