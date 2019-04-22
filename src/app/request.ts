@@ -7,8 +7,10 @@ export class Request {
     limit?: number;
     fromDate?: string;
     toDate?: string;
+    notInGroup: boolean = false;
+    notInWord: boolean = false;
 
-    constructor(name:string = "", childName:string = "", childValue:string = "", page:number = null, limit:number = 0, fromDate:string = "", toDate:string = "") {
+    constructor(name:string = "", childName:string = "", childValue:string = "", page:number = null, limit:number = 0, fromDate:string = "", toDate:string = "", notInGroup: boolean = false, notInWord: boolean = false) {
         this.name = name;
         this.childName = childName;
         this.childValue = childValue;
@@ -16,6 +18,8 @@ export class Request {
         this.limit = limit;
         this.fromDate = fromDate;
         this.toDate = toDate;
+        this.notInGroup = notInGroup;
+        this.notInWord = notInWord;
     }
 
     public paramsUrl() {
