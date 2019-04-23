@@ -8,7 +8,7 @@
       </div>
   </div>
 
-  <!-- LIST WORD -->
+  <!-- LIST GROUP -->
 
   <ul class="list">
       <li class="thead">
@@ -86,10 +86,10 @@
               </div>
           </div>
       </li>
-  </ul> <!-- END LIST WORD -->
+  </ul> <!-- END LIST GROUP -->
 
 
-  <!-- LIST GROUP -->
+  <!-- LIST WORD -->
 
   <ul class="list margin-top-2" *ngIf="controlsGroup.more">
       <li class="thead">
@@ -130,16 +130,16 @@
               </div>
           </div>
       </li>
-      <li *ngFor="let group of activeGroup.groups; let index = index" (click)="group.selected = !group.selected">
+      <li *ngFor="let word of activeGroup.words; let index = index" (click)="word.selected = !word.selected">
           <div>
               <div>
-                  <i class="material-icons" *ngIf="group.selected">check</i>
+                  <i class="material-icons" *ngIf="word.selected">check</i>
               </div>
               <div>
-                  <p>{{ group.name }}</p>
-                  <i>{{ group.description }}</i>
+                  <p>{{ word.name }}</p>
+                  <i>{{ word.mean }}</i>
               </div>
-              <div *ngIf="group.selected">
+              <div *ngIf="word.selected">
                   <!-- <i class="material-icons button-icon button-icon-clickable margin-left-1 float-right"
                       (click)="linkGroup(group._id); $event.stopPropagation()">link</i> -->
                   <i class="material-icons button-icon button-icon-clickable float-right"
@@ -147,32 +147,32 @@
               </div>
           </div>
       </li>
-  </ul> <!-- END LIST GROUP -->
+  </ul> <!-- END LIST WORD -->
 
-  <!-- LIST GROUP MAP -->
+  <!-- LIST WORD MAP -->
 
   <ul class="list margin-top-2" *ngIf="controlsGroup.map">
           <li class="thead">
               <div>
                   <div>
-                      <i class="material-icons button-icon" *ngIf="!controlsGroupMap.checkAll"
-                          (click)="toggleCheckAllGroupMap(true)">check_box_outline_blank</i>
-                      <i class="material-icons button-icon" *ngIf="controlsGroupMap.checkAll"
-                          (click)="toggleCheckAllGroupMap(false)">check_box</i>
+                      <i class="material-icons button-icon" *ngIf="!controlsWordMap.checkAll"
+                          (click)="toggleCheckAllWordMap(true)">check_box_outline_blank</i>
+                      <i class="material-icons button-icon" *ngIf="controlsWordMap.checkAll"
+                          (click)="toggleCheckAllWordMap(false)">check_box</i>
                   </div>
                   <div>
                       <p>{{ activeGroup && activeGroup.name ? activeGroup.name : "Please choose any group" }}</p>
                   </div>
                   <div>                        
                       <i class="material-icons button-icon button-icon-clickable"
-                          (click)="controlsGroupMap.search = !controlsGroupMap.search">search</i>
+                          (click)="controlsWordMap.search = !controlsWordMap.search">search</i>
                    
                           <i class="material-icons button-icon button-icon-clickable margin-left-1 bold">close</i>
                           <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="map()">done_outline</i>
                   </div>
               </div>
           </li>
-          <li class="thead-second" *ngIf="controlsGroupMap.search">
+          <li class="thead-second" *ngIf="controlsWordMap.search">
               <div>
                   <input type="text" class="textbox" placeholder="Search..."
                       [(ngModel)]="strSearchWord" (keyup.enter)="searchWord()">
@@ -195,5 +195,5 @@
                   </div>
               </div>
           </li>
-      </ul> <!-- END LIST GROUP MAP -->
+      </ul> <!-- END LIST WORD MAP -->
 </div>

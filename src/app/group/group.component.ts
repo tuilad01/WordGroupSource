@@ -312,7 +312,7 @@ export class GroupComponent implements OnInit {
 
   searchWord() {
     let request = new Request();
-    const queryRequest = this.strSearchGroup.queryRequest();
+    const queryRequest = this.strSearchWord.queryRequest();
     for (const item in queryRequest) {
       request[item] = queryRequest[item];
     }

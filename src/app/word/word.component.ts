@@ -304,7 +304,12 @@ export class WordComponent implements OnInit {
   }
 
   searchGroup() {
-    const request = <Request>this.strSearchWord.queryRequest();
+    let request = new Request();
+    const queryRequest = this.strSearchGroup.queryRequest();
+    for (const item in queryRequest) {
+      request[item] = queryRequest[item];
+    }
+
 
     this.groupService.getGroups(request).subscribe((response: Group[]) => {
       if (response && response.length) {

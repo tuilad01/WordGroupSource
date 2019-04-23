@@ -83,7 +83,7 @@ export class GroupService {
   }
 
   /** DELETE: delete the group from the server */
-  deleteGroup (group: Group | string): Observable<Group> {
+  deleteGroup (group: Group | string): Observable<ResultResponse> {
     const id = typeof group === 'string' ? group : group._id;
 
     const option = {
