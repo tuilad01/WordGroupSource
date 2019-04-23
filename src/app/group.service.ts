@@ -85,11 +85,17 @@ export class GroupService {
   /** DELETE: delete the group from the server */
   deleteGroup (group: Group | string): Observable<Group> {
     const id = typeof group === 'string' ? group : group._id;
-    const url = `${this.groupUrl}/?id=${id}`;
 
-    return this.http.delete<Group>(url, httpOptions).pipe(
+    const option = {
+      headers: httpOptions.headers,
+      body: {
+        _id: id
+      }
+    };
+
+    return this.http.delete<ResultResponse>(this.groupUrl, option).pipe(
       tap(_ => this.log(`deleted group id=${id}`)),
-      catchError(this.handleError<Group>('deleteGroup'))
+      catchError(this.handleError<ResultResponse>('deleteGroup'))
     );
   }
 
