@@ -24,10 +24,9 @@ const httpOptions = {
   styleUrls: ['./group.component.css']
 })
 export class GroupComponent implements OnInit {
+  title = "Group";
 
-  // @ViewChildren("textBoxName") inputName;
-
-  controlsGroup = {
+  controlPrimaryList = {
     add: false,
     search: false,
     map: false,
@@ -36,113 +35,89 @@ export class GroupComponent implements OnInit {
     checkAll: false
   }
 
-  controlsWord = {
+  controlSecondList = {
     search: false,
     checkAll: false
   }
 
-  controlsWordMap = {
+  controlMapList = {
     search: true,
     checkAll: false,
   }
 
   formAdd = {
     name: "",
-    description: ""
+    option: ""
   }
 
   formEdit = {
     name: "",
-    description: ""
+    option: ""
   }
 
-  strSearchGroup = "";
-  strSearchWord = "";
+  strSearchPrimaryList = "";
+  strSearchMapList = "";
 
-  currentGroupEdit: Group;
+  currentEditModel: Word;
 
-  data: Group[] = [
-    {
-      _id: "1",
-      name: "Voluptate 1",
-      description: "Aliqua Dolore minim ea sit ex duis labore sunt tempor.",
-      words: [
-        {
-          _id: "1",
-          name: "Ex adipisicing 1",
-          mean: "Sint eu esse eu exercitation fugiat."
-        },
-        {
-          _id: "2",
-          name: "Ex adipisicing 2",
-          mean: "Sint eu esse eu exercitation fugiat."
-        },
-        {
-          _id: "3",
-          name: "Ex adipisicing 3",
-          mean: "Sint eu esse eu exercitation fugiat."
-        },
-        {
-          _id: "4",
-          name: "Ex adipisicing 4",
-          mean: "Sint eu esse eu exercitation fugiat."
-        },
+  data: Group[] = [];
 
-      ],
-      selected: false
-    },
-    {
-      _id: "2",
-      name: "Voluptate 2",
-      description: "Aliqua",
-      words: [],
-      selected: false
-    },
-    {
-      _id: "3",
-      name: "Voluptate 3",
-      description: "Aliqua",
-      words: [],
-      selected: false
-    },
-    {
-      _id: "4",
-      name: "Voluptate 4",
-      description: "Aliqua",
-      words: [],
-      selected: false
-    }];
+  activeModel: Group;
 
-  activeGroup: Group;
+  dataMap: Word[] = [];
 
-  dataWord: Word[] = [];
-
+  public fieldArrPrimary = "words";
+  public fieldArrSecond = "groups";
+  public fieldOptionPrimary = "description";
+  public fieldOptionSecond = "mean";
 
   constructor(
     private location: Location,
-    private wordService: WordService,
-    private groupService: GroupService
+    private primaryService: GroupService,
+    private secondService: WordService
   ) { }
 
   ngOnInit() {
     const request = new Request();
     request.page = 0;
     request.limit = 10;
-    this.groupService.gets(request).subscribe((response: Group[]) => {
+    this.primaryService.gets(request).subscribe(response => {
       if (response && response.length) {
         this.data = response;
       }
     });
   }
 
+  private createModel (id = "", name = "", description = "", words?): Group {
+    const group = new Group();
+    group._id = id;
+    group.name = name;
+    group.description = description;
+    group.words = words;
+    return group;
+  }
+
+  private createDataLink(_id, words): any {
+    return {
+      _id: _id,
+      words: words
+    };
+  }
+
+  private parsePrimaryModel(obj: any): Group {
+    return obj as Group;
+  }
+
+  private parseSecondModel(obj: any): Word {
+    return obj as Word;
+  }
+
   add() {
     if (!this.formAdd.name) return;
 
-    const newGroup = new Group();
-    newGroup.name = this.formAdd.name;
-    newGroup.description = this.formAdd.description;
+    const model = this.createModel("", this.formAdd.name, this.formAdd.option, "");
 
-    this.groupService.add(newGroup).subscribe((response: ResultResponse) => {
+    this.primaryService.add(model).subscribe((response: ResultResponse) => {
 
       if (response && response.error.length > 0) {
         console.error(response.error);
@@ -150,12 +125,14 @@ export class GroupComponent implements OnInit {
       }
 
       if (response && response.saved.length > 0) {
-        this.controlsGroup.add = false;
+        this.controlPrimaryList.add = false;
 
         this.formAdd.name = "";
-        this.formAdd.description = "";
+        this.formAdd.option = "";
 
-        this.data.unshift(response.saved[0]);
+        response.saved.map(d => {
+          this.data.unshift(d);
+        });
       }
     });
   }
@@ -163,102 +140,160 @@ export class GroupComponent implements OnInit {
   showEdit(obj) {
     if (!obj) return false;
 
-    this.currentGroupEdit = obj;
+    this.currentEditModel = obj;
     this.formEdit.name = obj.name;
-    this.formEdit.description = obj.description;
+    this.formEdit.option = obj[this.fieldOptionPrimary];
 
-    this.controlsGroup.edit = true;
+    this.controlPrimaryList.edit = true;
   }
 
   edit() {
-    if (!this.currentGroupEdit) return false;
+    if (!this.currentEditModel) return false;
 
-    this.currentGroupEdit.name = this.formEdit.name;
-    this.currentGroupEdit.description = this.formEdit.description;
-    this.currentGroupEdit.words = "";
+    const model = this.createModel(this.currentEditModel._id, this.formEdit.name, this.formEdit.option, "");
 
-    this.groupService.update(this.currentGroupEdit).subscribe((response: ResultResponse) => {
+    this.primaryService.update(model).subscribe((response: ResultResponse) => {
       if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
       }
 
       if (response && response.saved.length > 0) {
-        const group = this.data.find(d => d._id === response.saved[0]._id);
+        let modelEdit = this.data.find(d => d._id === response.saved[0]._id);
 
-        if (group) {
-          group.name = response.saved[0].name;
-          group.description = response.saved[0].description;
+        if (modelEdit) {
+          modelEdit.name = response.saved[0].name;
+          modelEdit[this.fieldOptionPrimary] = response.saved[0][this.fieldOptionPrimary];
         }
-        this.controlsGroup.edit = false;
+        this.controlPrimaryList.edit = false;
 
         this.formEdit.name = "";
-        this.formEdit.description = "";
-        this.currentGroupEdit = null;
+        this.formEdit.option = "";
+        this.currentEditModel = null;
       }
     });
+  }
+
+  click_exclude(obj) {
+    this.exclude(this.activeModel, obj);
+  }
+
+  click_excludes() {
+    const result = confirm("Are you sure?");
+    if (!result) return false;
+
+    if(this.activeModel[this.fieldArrPrimary] instanceof Array) {
+      const element = this.activeModel[this.fieldArrPrimary];
+      const arr = element.filter(d => d.selected);
+      this.exclude(this.activeModel, arr);
+    }
+  }
+
+  exclude(active: Object, model: Object | Array<any>) {
+    if (!active) return; 
+
+    if (active[this.fieldArrPrimary] instanceof Array) {
+      const element = active[this.fieldArrPrimary];
+      let arrNew = [];
+      if (model instanceof Array) {
+        const arrGroup = model.map(d => d._id);
+        arrNew = element.filter(d => arrGroup.indexOf(d._id) === -1);
+      } else {
+        arrNew = element.filter(d => d._id !== model["_id"]);
+      }    
+
+      const modelEdit = { ...active };
+      modelEdit[this.fieldArrPrimary] = arrNew.map(d => d._id).join(",");
+      
+
+      this.primaryService.update(this.parsePrimaryModel(modelEdit)).subscribe(response => {
+        if (response && response.error.length > 0) {
+          console.error(response.error);
+          alert("something error!");
+        }
+  
+        if (response && response.saved.length > 0) {
+          const rsModel = this.data.find(d => d._id === response.saved[0]._id);
+  
+          if (rsModel) {
+            rsModel[this.fieldArrPrimary] = arrNew;
+            this.activeModel[this.fieldArrPrimary] = arrNew;
+          }
+        }
+      });
+    }
   }
 
   filter() {
 
   }
 
-  searchGroup() {
+  searchPrimaryList() {
     let request = new Request();
-    const queryRequest = this.strSearchGroup.queryRequest();
+    const queryRequest = this.strSearchPrimaryList.queryRequest();
     for (const item in queryRequest) {
       request[item] = queryRequest[item];
     }
 
-    this.groupService.gets(request).subscribe((response: Group[]) => {
+    this.primaryService.gets(request).subscribe(response => {
       if (response && response.length) {
         this.data = response;
 
-        this.controlsGroup.search = false;
+        this.controlPrimaryList.search = false;
       }
     });
   }
 
-  searchWord() {
+  searchMapList() {
     let request = new Request();
-    const queryRequest = this.strSearchWord.queryRequest();
+    const queryRequest = this.strSearchMapList.queryRequest();
     for (const item in queryRequest) {
       request[item] = queryRequest[item];
     }
 
-    this.wordService.gets(request).subscribe((response: Word[]) => {
-      if (response && response.length) {
-        this.dataWord = response;
 
-        this.controlsWordMap.search = false;
+    this.secondService.gets(request).subscribe((response: Group[]) => {
+      if (response && response.length) {
+        this.dataMap = response;
+
+        this.controlMapList.search = false;
       }
     });
   }
 
   map() {
-    const wordSelected = this.dataWord.filter(word => word.selected);
-    const activeGroup = this.data.find(d => d.selected);
-    if (!activeGroup || !activeGroup._id || wordSelected.length <= 0) return false;
+    const modelMapSelected = this.dataMap.filter(d => d.selected);
+    if (!this.activeModel || !this.activeModel._id || modelMapSelected.length <= 0) return false;
 
-    var data = {
-      _id: this.activeGroup._id,
-      words: wordSelected.map(group => group._id)
-    }
+    const data = this.createDataLink(this.activeModel._id, modelMapSelected.map(d => d._id))
 
-    this.wordService.link(data).subscribe((response: ResultResponse) => {
+    this.secondService.link(data).subscribe((response: ResultResponse) => {
       if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
       }
 
       if (response && response.saved.length > 0) {
-        this.ngOnInit();
+
+        this.controlPrimaryList.map = false;
+        this.controlPrimaryList.more = true;
+        this.controlMapList.checkAll = false;
+        this.dataMap.map(d => d.selected = false);
+
+        const resModel = response.saved[0];
+
+        if (resModel) {
+          this.primaryService.get(resModel._id).subscribe(response => {
+            if (response[0]) {
+              let itemData = this.data.find(d => d._id === response[0]._id);
+              if (itemData) {
+                itemData[this.fieldArrPrimary] = response[0][this.fieldArrPrimary];
+              }
+            }
+          });
+        }
       }
     });
-  }
-
-  more() {
-
   }
 
   delete(obj) {
@@ -266,57 +301,58 @@ export class GroupComponent implements OnInit {
 
     const result = confirm("Are you sure!");
     if (result) {
-      this.groupService.delete(obj._id).subscribe((response: ResultResponse) => {
+      this.primaryService.delete(obj._id).subscribe((response: ResultResponse) => {
         if (response && response.error.length > 0) {
           console.error(response.error);
           alert("something error!");
         }
 
         if (response && response.saved.length > 0) {
-          this.data = this.data.filter(group => group._id !== obj._id);
+          this.data = this.data.filter(d => d._id !== obj._id);
         }
       });
     }
   }
 
-  select(obj) {
+  selectPrimaryList (obj: Word) {
     obj.selected = !obj.selected;
-
     if (obj.selected) {
-      if (obj.words && obj.words instanceof Array) { // Check obj instance of Group
-        this.activeGroup = obj;
-      }
+        this.activeModel = obj;      
     } else {
-      this.activeGroup = new Group();
+      this.activeModel = this.createModel("", "", "", []);
     }
   }
 
+  selectSecondList(obj) {
+    obj.selected = !obj.selected;
+  }
+
   toggleAdd(value: boolean) {
-    this.controlsGroup.add = value;
+    this.controlPrimaryList.add = value;
 
     // if(value) {
     //   this.inputName.first.nativeElement.focus();
     // }
   }
 
-  toggleCheckAllGroup(value: boolean) {
-    this.controlsGroup.checkAll = value;
-    this.data.map(group => group.selected = value);
+  toggleCheckAllPrimaryList(value: boolean) {
+    this.controlPrimaryList.checkAll = value;
+    this.data.map(d => d.selected = value);
   }
 
-  toggleCheckAllWord(value: boolean) {
-    this.controlsWord.checkAll = value;
+  toggleCheckAllSecondList(value: boolean) {
+    this.controlSecondList.checkAll = value;
 
-    const group = this.data.find(group => group._id === this.activeGroup._id);
+    const model = this.data.find(d => d._id === this.activeModel._id);
 
-    if (group && group.words instanceof Array) {
-      group.words.map((word: Word) => word.selected = value);
+    if (model[this.fieldArrPrimary] instanceof Array) {
+      model[this.fieldArrPrimary].map(d => d.selected = value);
     }
   }
 
-  toggleCheckAllWordMap(value: boolean) {
-    this.controlsWordMap.checkAll = value;
-    this.dataWord.map(word => word.selected = value);
+  toggleCheckAllMapList(value: boolean) {
+    this.controlMapList.checkAll = value;
+    this.dataMap.map(d => d.selected = value);
   }
 
   goBack(): void {

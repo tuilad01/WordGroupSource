@@ -20,6 +20,7 @@ import { group } from '@angular/animations';
 export class WordComponent implements OnInit {
 
   // @ViewChildren("textBoxName") inputName;
+  title = "Word";
 
   controlPrimaryList = {
     add: false,
@@ -188,7 +189,7 @@ export class WordComponent implements OnInit {
 
     this.currentEditModel = obj;
     this.formEdit.name = obj.name;
-    this.formEdit.option = obj.mean;
+    this.formEdit.option = obj[this.fieldOptionPrimary];
 
     this.controlPrimaryList.edit = true;
   }
@@ -333,7 +334,7 @@ export class WordComponent implements OnInit {
             if (response[0]) {
               let itemData = this.data.find(d => d._id === response[0]._id);
               if (itemData) {
-                itemData = response[0];
+                itemData[this.fieldArrPrimary] = response[0][this.fieldArrPrimary];
               }
             }
           });
