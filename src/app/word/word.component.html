@@ -8,192 +8,188 @@
         </div>
     </div>
 
-    <!-- LIST WORD -->
+    <!-- PRIMARY LIST -->
 
     <ul class="list">
         <li class="thead">
-            <div [class.expend]="controlsWord.checkAll">
+            <div [class.expend]="controlPrimaryList.checkAll">
                 <div>
-                    <i class="material-icons button-icon" *ngIf="!controlsWord.checkAll"
-                        (click)="toggleCheckAllWord(true)">check_box_outline_blank</i>
-                    <i class="material-icons button-icon" *ngIf="controlsWord.checkAll"
-                        (click)="toggleCheckAllWord(false)">check_box</i>
+                    <i class="material-icons button-icon" *ngIf="!controlPrimaryList.checkAll"
+                        (click)="toggleCheckAllPrimaryList(true)">check_box_outline_blank</i>
+                    <i class="material-icons button-icon" *ngIf="controlPrimaryList.checkAll"
+                        (click)="toggleCheckAllPrimaryList(false)">check_box</i>
                 </div>
                 <div>
                     <p>Commodo elit</p>
                 </div>
                 <div>
-                    <i class="material-icons button-icon button-icon-clickable" *ngIf="controlsWord.checkAll"
+                    <i class="material-icons button-icon button-icon-clickable" *ngIf="controlPrimaryList.checkAll"
                         (click)="delete()">delete</i>
                     <i class="material-icons button-icon button-icon-clickable"
-                        [class.margin-left-1]="controlsWord.checkAll"
-                        (click)="controlsWord.search = !controlsWord.search">search</i>
+                        [class.margin-left-1]="controlPrimaryList.checkAll"
+                        (click)="controlPrimaryList.search = !controlPrimaryList.search">search</i>
                     <i class="material-icons button-icon button-icon-clickable margin-left-1"
-                        (click)="toggleAdd(!controlsWord.add)">add</i>
+                        (click)="toggleAdd(!controlPrimaryList.add)">add</i>
                     <i class="material-icons button-icon button-icon-clickable margin-left-1"
-                        (click)="controlsWord.map = !controlsWord.map">expand_more</i>
+                        (click)="controlPrimaryList.map = !controlPrimaryList.map">expand_more</i>
                     <!-- <i class="material-icons button-icon button-icon-clickable float-right">done_outline</i>
                     <i class="material-icons button-icon button-icon-clickable float-right bold">delete</i> -->
                 </div>
             </div>
         </li>
-        <li class="thead-second" *ngIf="controlsWord.search">
+        <li class="thead-second" *ngIf="controlPrimaryList.search">
             <div>
                 <input type="text" class="textbox" placeholder="Search..."
-                    [(ngModel)]="strSearchWord" (keyup.enter)="searchWord()">
+                    [(ngModel)]="strSearchPrimaryList" (keyup.enter)="searchPrimaryList()">
             </div>
         </li>
-        <li class="thead-second" *ngIf="controlsWord.add">
+        <li class="thead-second" *ngIf="controlPrimaryList.add">
             <div>
                 <input #textBoxName type="text" class="textbox" placeholder="Name..."
                     [(ngModel)]="formAdd.name">
                 <input type="text" class="textbox" placeholder="Mean..."
-                    [(ngModel)]="formAdd.mean">
+                    [(ngModel)]="formAdd.option">
                 <div class="element-right">
                     <button class="button" (click)="add()">Add</button>
                     <button class="button" (click)="toggleAdd(false)">Cancel</button>
                 </div>
             </div>
         </li>
-        <li class="thead-second" *ngIf="controlsWord.edit">
+        <li class="thead-second" *ngIf="controlPrimaryList.edit">
             <div>
                 <input #textBoxName type="text" class="textbox" placeholder="Name..."
                     [(ngModel)]="formEdit.name">
                 <input type="text" class="textbox" placeholder="Mean..."
-                    [(ngModel)]="formEdit.mean">
+                    [(ngModel)]="formEdit.option">
                 <div class="element-right">
                     <button class="button" (click)="edit()">Update</button>
-                    <button class="button" (click)="controlsWord.edit = false">Cancel</button>
+                    <button class="button" (click)="controlPrimaryList.edit = false">Cancel</button>
                 </div>
             </div>
         </li>
-        <li *ngFor="let word of data; let index = index" (click)="select(word)">
+        <li *ngFor="let item of data; let index = index" (click)="selectPrimaryList(item)">
             <div>
                 <div>
-                    <i class="material-icons" *ngIf="word.selected">check</i>
+                    <i class="material-icons" *ngIf="item.selected">check</i>
                 </div>
                 <div>
-                    <p>{{ word.name }}</p>
-                    <i>{{ word.mean }}</i>
+                    <p>{{ item.name }}</p>
+                    <i>{{ item[fieldOptionPrimary] }}</i>
                 </div>
-                <div *ngIf="word.selected">
+                <div *ngIf="item.selected">
                     <i class="material-icons button-icon button-icon-clickable"
-                        (click)="showEdit(word); $event.stopPropagation()">edit</i>
+                        (click)="showEdit(item); $event.stopPropagation()">edit</i>
                     <i class="material-icons button-icon button-icon-clickable margin-left-1"
-                        (click)="delete(word); $event.stopPropagation()">delete</i>
+                        (click)="delete(item); $event.stopPropagation()">delete</i>
                     <i class="material-icons button-icon button-icon-clickable margin-left-1"
-                        (click)="controlsWord.more = !controlsWord.more; $event.stopPropagation()">more_horiz</i>
+                        (click)="controlPrimaryList.more = !controlPrimaryList.more; $event.stopPropagation()">more_horiz</i>
                 </div>
             </div>
         </li>
-    </ul> <!-- END LIST WORD -->
+    </ul> <!-- END PRIMARY LIST -->
 
 
-    <!-- LIST GROUP -->
+    <!-- SECOND LIST -->
 
-    <ul class="list margin-top-2" *ngIf="controlsWord.more">
+    <ul class="list margin-top-2" *ngIf="controlPrimaryList.more">
         <li class="thead">
-            <div [class.expend]="controlsGroup.checkAll">
+            <div [class.expend]="controlSecondList.checkAll">
                 <div>
-                    <i class="material-icons button-icon" *ngIf="!controlsGroup.checkAll"
-                        (click)="toggleCheckAllGroup(true)">check_box_outline_blank</i>
-                    <i class="material-icons button-icon" *ngIf="controlsGroup.checkAll"
-                        (click)="toggleCheckAllGroup(false)">check_box</i>
+                    <i class="material-icons button-icon" *ngIf="!controlSecondList.checkAll"
+                        (click)="toggleCheckAllSecondList(true)">check_box_outline_blank</i>
+                    <i class="material-icons button-icon" *ngIf="controlSecondList.checkAll"
+                        (click)="toggleCheckAllSecondList(false)">check_box</i>
                 </div>
                 <div>
-                    <p>{{ activeWord && activeWord.name ? activeWord.name : "Please choose any word" }}</p>
+                    <p>{{ activeModel && activeModel.name ? "Reference of " + activeModel.name : "Please choose any data" }}</p>
                 </div>
                 <div>
                     <i class="material-icons button-icon button-icon-clickable float-right"
-                        [class.margin-left-1]="controlsGroup.checkAll"
-                        (click)="controlsGroup.search = !controlsGroup.search">search</i>
+                        [class.margin-left-1]="controlSecondList.checkAll"
+                        (click)="controlSecondList.search = !controlSecondList.search">search</i>
                     <i class="material-icons button-icon button-icon-clickable float-right"
-                        *ngIf="controlsGroup.checkAll" (click)="delete()">delete</i>
+                        *ngIf="controlSecondList.checkAll" (click)="click_excludes()">delete</i>
 
                     <!-- <i class="material-icons button-icon button-icon-clickable float-right">done_outline</i>
                     <i class="material-icons button-icon button-icon-clickable float-right bold">delete</i> -->
                 </div>
             </div>
         </li>
-        <li class="thead-second" *ngIf="controlsGroup.search">
+        <li class="thead-second" *ngIf="controlSecondList.search">
             <div>
                 <input type="text" class="textbox" placeholder="Search...">
             </div>
         </li>
-        <li class="thead-second" *ngIf="controlsGroup.add">
+        <!-- <li class="thead-second" *ngIf="controlSecondList.add">
             <div>
                 <input type="text" class="textbox" placeholder="Name">
                 <input type="text" class="textbox" placeholder="Description">
                 <div class="element-right">
                     <button class="button" click="add()">Add</button>
-                    <button class="button" (click)="controlsGroup.add = false">Cancel</button>
+                    <button class="button" (click)="controlSecondList.add = false">Cancel</button>
                 </div>
             </div>
-        </li>
-        <li *ngFor="let group of activeWord.groups; let index = index" (click)="group.selected = !group.selected">
+        </li> -->
+        <li *ngFor="let item of activeModel[fieldArrPrimary]; let index = index" (click)="item.selected = !item.selected">
             <div>
                 <div>
-                    <i class="material-icons" *ngIf="group.selected">check</i>
+                    <i class="material-icons" *ngIf="item.selected">check</i>
                 </div>
                 <div>
-                    <p>{{ group.name }}</p>
-                    <i>{{ group.description }}</i>
+                    <p>{{ item.name }}</p>
+                    <i>{{ item[fieldOptionSecond] }}</i>
                 </div>
-                <div *ngIf="group.selected">
-                    <!-- <i class="material-icons button-icon button-icon-clickable margin-left-1 float-right"
-                        (click)="linkGroup(group._id); $event.stopPropagation()">link</i> -->
+                <div *ngIf="item.selected">
                     <i class="material-icons button-icon button-icon-clickable float-right"
-                        (click)="exclude(); $event.stopPropagation()">close</i>
+                        (click)="click_exclude(item); $event.stopPropagation()">close</i>
                 </div>
             </div>
         </li>
-    </ul> <!-- END LIST GROUP -->
+    </ul> <!-- END SECOND LIST -->
 
-    <!-- LIST GROUP MAP -->
+    <!-- MAP LIST -->
 
-    <ul class="list margin-top-2" *ngIf="controlsWord.map">
+    <ul class="list margin-top-2" *ngIf="controlPrimaryList.map">
             <li class="thead">
                 <div>
                     <div>
-                        <i class="material-icons button-icon" *ngIf="!controlsGroupMap.checkAll"
-                            (click)="toggleCheckAllGroupMap(true)">check_box_outline_blank</i>
-                        <i class="material-icons button-icon" *ngIf="controlsGroupMap.checkAll"
-                            (click)="toggleCheckAllGroupMap(false)">check_box</i>
+                        <i class="material-icons button-icon" *ngIf="!controlMapList.checkAll"
+                            (click)="toggleCheckAllMapList(true)">check_box_outline_blank</i>
+                        <i class="material-icons button-icon" *ngIf="controlMapList.checkAll"
+                            (click)="toggleCheckAllMapList(false)">check_box</i>
                     </div>
                     <div>
-                        <p>{{ activeWord && activeWord.name ? activeWord.name : "Please choose any word" }}</p>
+                        <p>{{ activeModel && activeModel.name ? activeModel.name : "Please choose any data" }}</p>
                     </div>
                     <div>                        
-                        <i class="material-icons button-icon button-icon-clickable"
-                            (click)="controlsGroupMap.search = !controlsGroupMap.search">search</i>
-                     
-                            <i class="material-icons button-icon button-icon-clickable margin-left-1 bold">close</i>
-                            <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="map()">done_outline</i>
+                        <i class="material-icons button-icon button-icon-clickable margin-left-1 float-right" (click)="map()">done_outline</i>
+                        <i class="material-icons button-icon button-icon-clickable float-right"
+                            (click)="controlMapList.search = !controlMapList.search">search</i>
                     </div>
                 </div>
             </li>
-            <li class="thead-second" *ngIf="controlsGroupMap.search">
+            <li class="thead-second" *ngIf="controlMapList.search">
                 <div>
                     <input type="text" class="textbox" placeholder="Search..."
-                        [(ngModel)]="strSearchGroup" (keyup.enter)="searchGroup()">
+                        [(ngModel)]="strSearchMapList" (keyup.enter)="searchMapList()">
                 </div>
             </li>         
-            <li *ngFor="let group of dataGroup; let index = index" (click)="select(group)">
+            <li *ngFor="let item of dataMap; let index = index" (click)="selectSecondList(item)">
                 <div>
                     <div>
-                        <i class="material-icons" *ngIf="group.selected">check</i>
+                        <i class="material-icons" *ngIf="item.selected">check</i>
                     </div>
                     <div>
-                        <p>{{ group.name }}</p>
-                        <i>{{ group.mean }}</i>
+                        <p>{{ item.name }}</p>
+                        <i>{{ item[fieldOptionPrimary] }}</i>
                     </div>
-                    <div *ngIf="group.selected">                  
-                        <i class="material-icons button-icon button-icon-clickable margin-left-1"
+                    <div *ngIf="item.selected">                  
+                        <i class="material-icons button-icon button-icon-clickable float-right"
                             (click)="delete(); $event.stopPropagation()">close</i>
                         <!-- <i class="material-icons button-icon button-icon-clickable margin-left-1"
                             (click)="$event.stopPropagation()">link</i> -->
                     </div>
                 </div>
             </li>
-        </ul> <!-- END LIST GROUP MAP -->
+        </ul> <!-- END MAP LIST -->
 </div>

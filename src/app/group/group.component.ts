@@ -111,101 +111,7 @@ export class GroupComponent implements OnInit {
       description: "Aliqua",
       words: [],
       selected: false
-    }
-    // ,
-    // {
-    //   _id: "5",
-    //   name: "Voluptate 5",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "6",
-    //   name: "Voluptate 6",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "7",
-    //   name: "Voluptate 7",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "8",
-    //   name: "Voluptate 8",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "9",
-    //   name: "Voluptate 9",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "10",
-    //   name: "Voluptate 10",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "11",
-    //   name: "Voluptate 11",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "12",
-    //   name: "Voluptate 12",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "13",
-    //   name: "Voluptate 13",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "14",
-    //   name: "Voluptate 14",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "15",
-    //   name: "Voluptate 15",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "16",
-    //   name: "Voluptate 16",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "17",
-    //   name: "Voluptate 17",
-    //   description: "Aliqua",
-    //   words: [],
-    //   selected: false
-    // },
-
-  ];
+    }];
 
   activeGroup: Group;
 
@@ -222,7 +128,7 @@ export class GroupComponent implements OnInit {
     const request = new Request();
     request.page = 0;
     request.limit = 10;
-    this.groupService.getGroups(request).subscribe((response: Group[]) => {
+    this.groupService.gets(request).subscribe((response: Group[]) => {
       if (response && response.length) {
         this.data = response;
       }
@@ -236,7 +142,7 @@ export class GroupComponent implements OnInit {
     newGroup.name = this.formAdd.name;
     newGroup.description = this.formAdd.description;
 
-    this.groupService.addGroup(newGroup).subscribe((response: ResultResponse) => {
+    this.groupService.add(newGroup).subscribe((response: ResultResponse) => {
 
       if (response && response.error.length > 0) {
         console.error(response.error);
@@ -245,6 +151,9 @@ export class GroupComponent implements OnInit {
 
       if (response && response.saved.length > 0) {
         this.controlsGroup.add = false;
+
+        this.formAdd.name = "";
+        this.formAdd.description = "";
 
         this.data.unshift(response.saved[0]);
       }
@@ -268,7 +177,7 @@ export class GroupComponent implements OnInit {
     this.currentGroupEdit.description = this.formEdit.description;
     this.currentGroupEdit.words = "";
 
-    this.groupService.updateGroup(this.currentGroupEdit).subscribe((response: ResultResponse) => {
+    this.groupService.update(this.currentGroupEdit).subscribe((response: ResultResponse) => {
       if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
@@ -301,7 +210,7 @@ export class GroupComponent implements OnInit {
       request[item] = queryRequest[item];
     }
 
-    this.groupService.getGroups(request).subscribe((response: Group[]) => {
+    this.groupService.gets(request).subscribe((response: Group[]) => {
       if (response && response.length) {
         this.data = response;
 
@@ -317,7 +226,7 @@ export class GroupComponent implements OnInit {
       request[item] = queryRequest[item];
     }
 
-    this.wordService.getWords(request).subscribe((response: Word[]) => {
+    this.wordService.gets(request).subscribe((response: Word[]) => {
       if (response && response.length) {
         this.dataWord = response;
 
@@ -336,7 +245,7 @@ export class GroupComponent implements OnInit {
       words: wordSelected.map(group => group._id)
     }
 
-    this.wordService.linkGroup(data).subscribe((response: ResultResponse) => {
+    this.wordService.link(data).subscribe((response: ResultResponse) => {
       if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
@@ -357,7 +266,7 @@ export class GroupComponent implements OnInit {
 
     const result = confirm("Are you sure!");
     if (result) {
-      this.groupService.deleteGroup(obj._id).subscribe((response: ResultResponse) => {
+      this.groupService.delete(obj._id).subscribe((response: ResultResponse) => {
         if (response && response.error.length > 0) {
           console.error(response.error);
           alert("something error!");

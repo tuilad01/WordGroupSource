@@ -10,6 +10,7 @@ import { Request } from '../request';
 import { ResultResponse } from '../resultResponse';
 
 import './../extentions';
+import { group } from '@angular/animations';
 
 @Component({
   selector: 'app-word',
@@ -20,7 +21,7 @@ export class WordComponent implements OnInit {
 
   // @ViewChildren("textBoxName") inputName;
 
-  controlsWord = {
+  controlPrimaryList = {
     add: false,
     search: false,
     map: false,
@@ -29,30 +30,30 @@ export class WordComponent implements OnInit {
     checkAll: false
   }
 
-  controlsGroup = {
+  controlSecondList = {
     search: false,
     checkAll: false
   }
 
-  controlsGroupMap = {
+  controlMapList = {
     search: true,
     checkAll: false,
   }
 
   formAdd = {
     name: "",
-    mean: ""
+    option: ""
   }
 
   formEdit = {
     name: "",
-    mean: ""
+    option: ""
   }
 
-  strSearchWord = "";
-  strSearchGroup = "";
+  strSearchPrimaryList = "";
+  strSearchMapList = "";
 
-  currentWordEdit: Word;
+  currentEditModel: Word;
 
   data: Word[] = [
     {
@@ -105,131 +106,64 @@ export class WordComponent implements OnInit {
       groups: [],
       selected: false
     }
-    // ,
-    // {
-    //   _id: "5",
-    //   name: "Voluptate 5",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "6",
-    //   name: "Voluptate 6",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "7",
-    //   name: "Voluptate 7",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "8",
-    //   name: "Voluptate 8",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "9",
-    //   name: "Voluptate 9",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "10",
-    //   name: "Voluptate 10",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "11",
-    //   name: "Voluptate 11",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "12",
-    //   name: "Voluptate 12",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "13",
-    //   name: "Voluptate 13",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "14",
-    //   name: "Voluptate 14",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "15",
-    //   name: "Voluptate 15",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "16",
-    //   name: "Voluptate 16",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-    // {
-    //   _id: "17",
-    //   name: "Voluptate 17",
-    //   mean: "Aliqua",
-    //   groups: [],
-    //   selected: false
-    // },
-
   ];
 
-  activeWord: Word;
+  activeModel: Word;
 
-  dataGroup: Group[] = [];
+  dataMap: Group[] = [];
 
+  public fieldArrPrimary = "groups";
+  public fieldArrSecond = "words";
+  public fieldOptionPrimary = "mean";
+  public fieldOptionSecond = "description";
 
   constructor(
     private location: Location,
-    private wordService: WordService,
-    private groupService: GroupService
+    private primaryService: WordService,
+    private secondService: GroupService
   ) { }
 
   ngOnInit() {
     const request = new Request();
     request.page = 0;
     request.limit = 10;
-    this.wordService.getWords(request).subscribe((response: Word[]) => {
+    this.primaryService.gets(request).subscribe(response => {
       if (response && response.length) {
         this.data = response;
       }
     });
   }
 
+  private createModel (id = "", name = "", mean = "", groups?): Word {
+    const word = new Word();
+    word._id = id;
+    word.name = name;
+    word.mean = mean;
+    word.groups = groups;
+    return word;
+  }
+
+  private createDataLink(_id, groups): any {
+    return {
+      _id: _id,
+      groups: groups
+    };
+  }
+
+  private parsePrimaryModel(obj: any): Word {
+    return obj as Word;
+  }
+
+  private parseSecondModel(obj: any): Group {
+    return obj as Group;
+  }
+
   add() {
     if (!this.formAdd.name) return;
 
-    const newWord = new Word();
-    newWord.name = this.formAdd.name;
-    newWord.mean = this.formAdd.mean;
+    const model = this.createModel("", this.formAdd.name, this.formAdd.option, "");
 
-    this.wordService.addWord(newWord).subscribe((response: ResultResponse) => {
+    this.primaryService.add(model).subscribe((response: ResultResponse) => {
 
       if (response && response.error.length > 0) {
         console.error(response.error);
@@ -237,9 +171,14 @@ export class WordComponent implements OnInit {
       }
 
       if (response && response.saved.length > 0) {
-        this.controlsWord.add = false;
+        this.controlPrimaryList.add = false;
 
-        this.data.unshift(response.saved[0]);
+        this.formAdd.name = "";
+        this.formAdd.option = "";
+
+        response.saved.map(d => {
+          this.data.unshift(d);
+        });
       }
     });
   }
@@ -247,103 +186,160 @@ export class WordComponent implements OnInit {
   showEdit(obj) {
     if (!obj) return false;
 
-    this.currentWordEdit = obj;
+    this.currentEditModel = obj;
     this.formEdit.name = obj.name;
-    this.formEdit.mean = obj.mean;
+    this.formEdit.option = obj.mean;
 
-    this.controlsWord.edit = true;
+    this.controlPrimaryList.edit = true;
   }
 
   edit() {
-    if (!this.currentWordEdit) return false;
+    if (!this.currentEditModel) return false;
 
-    this.currentWordEdit.name = this.formEdit.name;
-    this.currentWordEdit.mean = this.formEdit.mean;
-    this.currentWordEdit.groups = "";
+    const model = this.createModel(this.currentEditModel._id, this.formEdit.name, this.formEdit.option, "");
 
-    this.wordService.updateWord(this.currentWordEdit).subscribe((response: ResultResponse) => {
+    this.primaryService.update(model).subscribe((response: ResultResponse) => {
       if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
       }
 
       if (response && response.saved.length > 0) {
-        const word = this.data.find(d => d._id === response.saved[0]._id);
+        let modelEdit = this.data.find(d => d._id === response.saved[0]._id);
 
-        if (word) {
-          word.name = response.saved[0].name;
-          word.mean = response.saved[0].mean;
+        if (modelEdit) {
+          modelEdit.name = response.saved[0].name;
+          modelEdit[this.fieldOptionPrimary] = response.saved[0][this.fieldOptionPrimary];
         }
-        this.controlsWord.edit = false;
+        this.controlPrimaryList.edit = false;
 
         this.formEdit.name = "";
-        this.formEdit.mean = "";
-        this.currentWordEdit = null;
+        this.formEdit.option = "";
+        this.currentEditModel = null;
       }
     });
+  }
+
+  click_exclude(obj) {
+    this.exclude(this.activeModel, obj);
+  }
+
+  click_excludes() {
+    const result = confirm("Are you sure?");
+    if (!result) return false;
+
+    if(this.activeModel[this.fieldArrPrimary] instanceof Array) {
+      const element = this.activeModel[this.fieldArrPrimary];
+      const arr = element.filter(d => d.selected);
+      this.exclude(this.activeModel, arr);
+    }
+  }
+
+  exclude(active: Object, model: Object | Array<any>) {
+    if (!active) return; 
+
+    if (active[this.fieldArrPrimary] instanceof Array) {
+      const element = active[this.fieldArrPrimary];
+      let arrNew = [];
+      if (model instanceof Array) {
+        const arrGroup = model.map(d => d._id);
+        arrNew = element.filter(d => arrGroup.indexOf(d._id) === -1);
+      } else {
+        arrNew = element.filter(d => d._id !== model["_id"]);
+      }    
+
+      const modelEdit = { ...active };
+      modelEdit[this.fieldArrPrimary] = arrNew.map(d => d._id).join(",");
+      
+
+      this.primaryService.update(this.parsePrimaryModel(modelEdit)).subscribe(response => {
+        if (response && response.error.length > 0) {
+          console.error(response.error);
+          alert("something error!");
+        }
+  
+        if (response && response.saved.length > 0) {
+          const rsModel = this.data.find(d => d._id === response.saved[0]._id);
+  
+          if (rsModel) {
+            rsModel[this.fieldArrPrimary] = arrNew;
+            this.activeModel[this.fieldArrPrimary] = arrNew;
+          }
+        }
+      });
+    }
   }
 
   filter() {
 
   }
 
-  searchWord() {
+  searchPrimaryList() {
     let request = new Request();
-    const queryRequest = this.strSearchWord.queryRequest();
+    const queryRequest = this.strSearchPrimaryList.queryRequest();
     for (const item in queryRequest) {
       request[item] = queryRequest[item];
     }
 
-    this.wordService.getWords(request).subscribe((response: Word[]) => {
+    this.primaryService.gets(request).subscribe(response => {
       if (response && response.length) {
         this.data = response;
 
-        this.controlsWord.search = false;
+        this.controlPrimaryList.search = false;
       }
     });
   }
 
-  searchGroup() {
+  searchMapList() {
     let request = new Request();
-    const queryRequest = this.strSearchGroup.queryRequest();
+    const queryRequest = this.strSearchMapList.queryRequest();
     for (const item in queryRequest) {
       request[item] = queryRequest[item];
     }
 
 
-    this.groupService.getGroups(request).subscribe((response: Group[]) => {
+    this.secondService.gets(request).subscribe((response: Group[]) => {
       if (response && response.length) {
-        this.dataGroup = response;
+        this.dataMap = response;
 
-        this.controlsGroupMap.search = false;
+        this.controlMapList.search = false;
       }
     });
   }
 
   map() {
-    const groupSelected = this.dataGroup.filter(group => group.selected);
-    const activeWord = this.data.find(d => d.selected);
-    if (!activeWord || !activeWord._id || groupSelected.length <= 0) return false;
+    const modelMapSelected = this.dataMap.filter(d => d.selected);
+    if (!this.activeModel || !this.activeModel._id || modelMapSelected.length <= 0) return false;
 
-    var data = {
-      _id: this.activeWord._id,
-      groups: groupSelected.map(group => group._id)
-    }
+    const data = this.createDataLink(this.activeModel._id, modelMapSelected.map(d => d._id))
 
-    this.groupService.linkWord(data).subscribe((response: ResultResponse) => {
+    this.secondService.link(data).subscribe((response: ResultResponse) => {
       if (response && response.error.length > 0) {
         console.error(response.error);
         alert("something error!");
       }
 
       if (response && response.saved.length > 0) {
-        this.ngOnInit();
+
+        this.controlPrimaryList.map = false;
+        this.controlPrimaryList.more = true;
+        this.controlMapList.checkAll = false;
+        this.dataMap.map(d => d.selected = false);
+
+        const resModel = response.saved[0];
+
+        if (resModel) {
+          this.primaryService.get(resModel._id).subscribe(response => {
+            if (response[0]) {
+              let itemData = this.data.find(d => d._id === response[0]._id);
+              if (itemData) {
+                itemData = response[0];
+              }
+            }
+          });
+        }
       }
     });
-  }
-
-  more() {
-
   }
 
   delete(obj) {
@@ -351,57 +347,58 @@ export class WordComponent implements OnInit {
 
     const result = confirm("Are you sure!");
     if (result) {
-      this.wordService.deleteWord(obj._id).subscribe((response: ResultResponse) => {
+      this.primaryService.delete(obj._id).subscribe((response: ResultResponse) => {
         if (response && response.error.length > 0) {
           console.error(response.error);
           alert("something error!");
         }
 
         if (response && response.saved.length > 0) {
-          this.data = this.data.filter(word => word._id !== obj._id);
+          this.data = this.data.filter(d => d._id !== obj._id);
         }
       });
     }
   }
 
-  select(obj) {
+  selectPrimaryList (obj: Word) {
     obj.selected = !obj.selected;
-
     if (obj.selected) {
-      if (obj.groups && obj.groups instanceof Array) { // Check obj instance of Word
-        this.activeWord = obj;
-      }
+        this.activeModel = obj;      
     } else {
-      this.activeWord = new Word();
+      this.activeModel = this.createModel("", "", "", []);
     }
   }
 
+  selectSecondList(obj) {
+    obj.selected = !obj.selected;
+  }
+
   toggleAdd(value: boolean) {
-    this.controlsWord.add = value;
+    this.controlPrimaryList.add = value;
 
     // if(value) {
     //   this.inputName.first.nativeElement.focus();
     // }
   }
 
-  toggleCheckAllWord(value: boolean) {
-    this.controlsWord.checkAll = value;
-    this.data.map(word => word.selected = value);
+  toggleCheckAllPrimaryList(value: boolean) {
+    this.controlPrimaryList.checkAll = value;
+    this.data.map(d => d.selected = value);
   }
 
-  toggleCheckAllGroup(value: boolean) {
-    this.controlsGroup.checkAll = value;
+  toggleCheckAllSecondList(value: boolean) {
+    this.controlSecondList.checkAll = value;
 
-    const word = this.data.find(word => word._id === this.activeWord._id);
+    const model = this.data.find(d => d._id === this.activeModel._id);
 
-    if (word && word.groups instanceof Array) {
-      word.groups.map((group: Group) => group.selected = value);
+    if (model[this.fieldArrPrimary] instanceof Array) {
+      model[this.fieldArrPrimary].map(d => d.selected = value);
     }
   }
 
-  toggleCheckAllGroupMap(value: boolean) {
-    this.controlsGroupMap.checkAll = value;
-    this.dataGroup.map(group => group.selected = value);
+  toggleCheckAllMapList(value: boolean) {
+    this.controlMapList.checkAll = value;
+    this.dataMap.map(d => d.selected = value);
   }
 
   goBack(): void {

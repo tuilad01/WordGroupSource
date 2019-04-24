@@ -30,7 +30,7 @@ export class WordService {
   ) { }
 
   /** GET words from the server */
-  getWords (request: Request = null): Observable<Word[]> {
+  gets (request: Request = null): Observable<Word[]> {
     const param = request.paramsUrl();
     const url = param ? `${this.wordUrl}?${param}` : this.wordUrl;
     
@@ -42,16 +42,16 @@ export class WordService {
   }
 
   /** GET word by id. Will 404 if id not found */
-  getWord(id: string): Observable<Word> {
+  get(id: string): Observable<Word[]> {
     const url = `${this.wordUrl}/?id=${id}`;
-    return this.http.get<Word>(url).pipe(
+    return this.http.get<Word[]>(url).pipe(
       tap(_ => this.log(`fetched word id=${id}`)),
-      catchError(this.handleError<Word>(`getWord id=${id}`))
+      catchError(this.handleError<Word[]>(`getWord id=${id}`))
     );
   }
 
   /* GET words whose name contains search term */
-  searchWords(term: string): Observable<Word[]> {
+  search(term: string): Observable<Word[]> {
     if (!term.trim()) {
       // if not search term, return empty word array.
       return of([]);
@@ -64,7 +64,7 @@ export class WordService {
 
   //////// Save methods //////////
 
-  linkGroup(data) : Observable<any> {
+  link(data) : Observable<any> {
     return this.http.put<any>(this.wordUrl + "/linkgroup", data, httpOptions).pipe(
       tap(_ => this.log(`group linkGroup`)),
       catchError(this.handleError<any>('linkGroup'))
@@ -72,7 +72,7 @@ export class WordService {
   }
 
   /** POST: add a new word to the server */
-  addWord (word: Word): Observable<ResultResponse> {
+  add (word: Word): Observable<ResultResponse> {
     return this.http.post<ResultResponse>(this.wordUrl, word, httpOptions).pipe(
       tap(_ => this.log(`added word`)),
       catchError(this.handleError<ResultResponse>('addWord'))
@@ -80,7 +80,7 @@ export class WordService {
   }
 
   /** DELETE: delete the word from the server */
-  deleteWord (word: Word | string): Observable<ResultResponse> {
+  delete (word: Word | string): Observable<ResultResponse> {
     const id = typeof word === 'string' ? word : word._id;
     // const url = `${this.wordUrl}/?id=${id}`;
 
@@ -98,7 +98,7 @@ export class WordService {
   }
 
   /** PUT: update the word on the server */
-  updateWord (word: Word): Observable<any> {
+  update (word: Word): Observable<any> {
     return this.http.put(this.wordUrl, word, httpOptions).pipe(
       tap(_ => this.log(`updated word id=${word._id}`)),
       catchError(this.handleError<any>('updateWord'))
