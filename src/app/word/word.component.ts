@@ -33,7 +33,8 @@ export class WordComponent implements OnInit {
 
   controlSecondList = {
     search: false,
-    checkAll: false
+    checkAll: false,
+    numberSelected: 0
   }
 
   controlMapList = {
@@ -370,8 +371,16 @@ export class WordComponent implements OnInit {
     }
   }
 
-  selectSecondList(obj) {
+  selectSecondList(obj: Word) { 
     obj.selected = !obj.selected;
+    if (this.activeModel[this.fieldArrPrimary] instanceof Array) {
+      this.controlSecondList.numberSelected = this.activeModel[this.fieldArrPrimary].filter(d => d.selected).length;
+    }
+  }
+
+  selectMapList(obj: Word) {
+    obj.selected = !obj.selected;
+
   }
 
   toggleAdd(value: boolean) {
@@ -394,6 +403,7 @@ export class WordComponent implements OnInit {
 
     if (model[this.fieldArrPrimary] instanceof Array) {
       model[this.fieldArrPrimary].map(d => d.selected = value);
+      this.controlSecondList.numberSelected = model[this.fieldArrPrimary].filter(d => d.selected).length;     
     }
   }
 

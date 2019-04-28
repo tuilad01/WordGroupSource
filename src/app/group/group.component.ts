@@ -37,7 +37,8 @@ export class GroupComponent implements OnInit {
 
   controlSecondList = {
     search: false,
-    checkAll: false
+    checkAll: false,
+    numberSelected: 0
   }
 
   controlMapList = {
@@ -314,7 +315,7 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  selectPrimaryList (obj: Word) {
+  selectPrimaryList (obj: Group) {
     obj.selected = !obj.selected;
     if (obj.selected) {
         this.activeModel = obj;      
@@ -323,8 +324,16 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  selectSecondList(obj) {
+  selectSecondList(obj: Word) { 
     obj.selected = !obj.selected;
+    if (this.activeModel[this.fieldArrPrimary] instanceof Array) {
+      this.controlSecondList.numberSelected = this.activeModel[this.fieldArrPrimary].filter(d => d.selected).length;
+    }
+  }
+
+  selectMapList(obj: Word) {
+    obj.selected = !obj.selected;
+
   }
 
   toggleAdd(value: boolean) {
@@ -347,6 +356,7 @@ export class GroupComponent implements OnInit {
 
     if (model[this.fieldArrPrimary] instanceof Array) {
       model[this.fieldArrPrimary].map(d => d.selected = value);
+      this.controlSecondList.numberSelected = model[this.fieldArrPrimary].filter(d => d.selected).length;     
     }
   }
 

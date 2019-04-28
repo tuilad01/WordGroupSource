@@ -101,14 +101,14 @@
                         (click)="toggleCheckAllSecondList(false)">check_box</i>
                 </div>
                 <div>
-                    <p>{{ activeModel && activeModel.name ? "Reference of " + activeModel.name : "Please choose any data" }}</p>
+                    <p> {{ this.controlSecondList.numberSelected ? this.controlSecondList.numberSelected + " | " : "" }} {{ activeModel && activeModel.name ? "Reference of " + activeModel.name + " " + activeModel[fieldArrPrimary].length : "Please choose any data" }}</p>
                 </div>
                 <div>
                     <i class="material-icons button-icon button-icon-clickable float-right"
                         [class.margin-left-1]="controlSecondList.checkAll"
                         (click)="controlSecondList.search = !controlSecondList.search">search</i>
                     <i class="material-icons button-icon button-icon-clickable float-right"
-                        *ngIf="controlSecondList.checkAll" (click)="click_excludes()">delete</i>
+                        *ngIf="controlSecondList.numberSelected" (click)="click_excludes()">delete</i>
 
                     <!-- <i class="material-icons button-icon button-icon-clickable float-right">done_outline</i>
                     <i class="material-icons button-icon button-icon-clickable float-right bold">delete</i> -->
@@ -130,7 +130,7 @@
                 </div>
             </div>
         </li> -->
-        <li *ngFor="let item of activeModel[fieldArrPrimary]; let index = index" (click)="item.selected = !item.selected">
+        <li *ngFor="let item of activeModel[fieldArrPrimary]; let index = index" (click)="selectSecondList(item)">
             <div>
                 <div>
                     <i class="material-icons" *ngIf="item.selected">check</i>
@@ -174,7 +174,7 @@
                         [(ngModel)]="strSearchMapList" (keyup.enter)="searchMapList()">
                 </div>
             </li>         
-            <li *ngFor="let item of dataMap; let index = index" (click)="selectSecondList(item)">
+            <li *ngFor="let item of dataMap; let index = index" (click)="selectMapList(item)">
                 <div>
                     <div>
                         <i class="material-icons" *ngIf="item.selected">check</i>

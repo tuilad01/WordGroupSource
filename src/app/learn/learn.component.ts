@@ -38,6 +38,8 @@ export class LearnComponent implements OnInit {
 
   temp = "";
 
+  tryFlipped = false;
+
   url_word = environment.baseUrl + "/word";
   url_group = environment.baseUrl + "/group";
 
@@ -133,10 +135,8 @@ export class LearnComponent implements OnInit {
     return this.dataTemp = [];
   }
 
-  try() {
-    const firstWord = this.dataTemp[0];
-    const flipped = !firstWord.flipped;
-
+  try() { 
+    this.tryFlipped = !this.tryFlipped;
     for (let i = 0; i < this.dataTemp.length; i++) {
       const wordTemp = this.dataTemp[i];
 
@@ -145,7 +145,7 @@ export class LearnComponent implements OnInit {
 
         if (word.id == wordTemp.id) {
           word.display = wordTemp.display;
-          word.flipped = flipped;
+          word.flipped = this.tryFlipped;
           break;
         }
       }
