@@ -169,7 +169,14 @@ export class WordComponent implements OnInit {
 
       if (response && response.error.length > 0) {
         console.error(response.error);
-        alert("something error!");
+
+        const arrError = this.handleError(response.error);
+        if (arrError.length > 0) {
+          alert("Something error!!! may be can't insert: " + arrError.join(", "));
+        } else {
+          alert("Something error!!!")
+        }
+        
       }
 
       if (response && response.saved.length > 0) {
@@ -184,6 +191,20 @@ export class WordComponent implements OnInit {
       }
     });
   }
+  handleError(errors) {
+    let resultError = [];
+    const regex = /\{\s\:\s\"(.+?)\"\s\}/gi;
+    for (let i = 0; i < errors.length; i++) {
+      debugger;
+        const err = errors[i];
+        const field = regex.exec(err)[1];
+        regex.lastIndex = 0;
+        if (!field) continue;
+
+        resultError.push(field);
+    }
+    return resultError;
+}
 
   showEdit(obj) {
     if (!obj) return false;
