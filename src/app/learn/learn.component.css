@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 ul {
     padding-left: 0;
     display: flex;
@@ -82,6 +84,12 @@ li:nth-child(-7n+7) .front, li:nth-child(-7n+7) .back {
     background-color: #e46055;
 }
 
+.volume-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 10px 15px;
+}
 
 .delete-card {
     position: absolute;

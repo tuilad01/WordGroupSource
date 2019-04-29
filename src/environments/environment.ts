@@ -5,9 +5,9 @@
 export const environment = {
   production: false,
   //baseUrl: 'https://wordgroup123.herokuapp.com',
-  baseUrl: '//localhost:4000',
-  wordUrl: '//localhost:4000/word',
-  groupUrl: '//localhost:4000/group',
+  baseUrl: '//192.168.1.167:4000',
+  wordUrl: '//192.168.1.167:4000/word',
+  groupUrl: '//192.168.1.167:4000/group',
   settings: {
     cacheLocal: "cacheLocal"
   }

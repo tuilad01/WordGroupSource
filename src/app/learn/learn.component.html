@@ -10,21 +10,23 @@
 
     <span class="error" style="display: none;">Oops! Flashcards need a front and a back.</span>
   </div>
-  
-  <ul class="flashcard-list" >
+
+  <ul class="flashcard-list">
     <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display">
       <div class="card" (click)="flipped(word._id)" [@flipState]="word.flipped ? 'active' : 'inactive'">
         <div class="front">
-            <p>{{ word.name }}</p>
-            <span class="delete-card" (click)="delete(index)">X</span>
+          <i class="volume-icon material-icons" (click)="listen(word.name); $event.stopPropagation()">volume_up</i>
+          <p>{{ word.name }}</p>
+          <span class="delete-card" (click)="delete(index)">X</span>
         </div>
         <div class="back">
-            <p>{{ word.mean }}</p>
-            <span class="delete-card" (click)="delete(index)">X</span>
+          <p>{{ word.mean }}</p>
+          <span class="delete-card" (click)="delete(index)">X</span>
         </div>
       </div>
-    
+
     </li>
-   
+
   </ul>
 </div>
+<!-- <audio autoplay [src]="speech" class="speech" hidden></audio> -->

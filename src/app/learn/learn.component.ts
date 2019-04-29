@@ -36,6 +36,8 @@ import { environment } from './../../environments/environment';
 })
 export class LearnComponent implements OnInit {
 
+  speech = "";
+
   dataTemp = [];
   data = [];
 
@@ -72,7 +74,7 @@ export class LearnComponent implements OnInit {
         }
       } else {
         this.groupService.get(id).subscribe(response => {
-          if(response && response.length && response[0].words && (response[0].words instanceof Array)) {
+          if (response && response.length && response[0].words && (response[0].words instanceof Array)) {
             this.data = response[0]["words"].map(word => this.prepareModelWordCard(word));
           }
         });
@@ -168,4 +170,15 @@ export class LearnComponent implements OnInit {
     word.flipped = !word.flipped;
   }
 
+  listen(str) {
+    const arrStr = str.split(" ").map(d => this.jsUcfirst(d));
+
+    const query = arrStr.join("+");
+    this.speech = `http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${query}`;
+    
+    window.open(this.speech, '_blank');
+  }
+  jsUcfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 }
