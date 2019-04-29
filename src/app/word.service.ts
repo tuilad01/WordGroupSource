@@ -7,6 +7,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Word } from './word';
 import { Request } from './request';
 import { MessageService } from './message.service';
+import { LocalStorageService } from './local-storage.service';
 
 import { environment } from './../environments/environment';
 import { ResultResponse } from './resultResponse';
@@ -15,6 +16,7 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
+const fieldLocalStorage = "words";
 
 @Injectable({
   providedIn: 'root'
@@ -26,17 +28,31 @@ export class WordService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private localStorageService: LocalStorageService
   ) { }
 
   /** GET words from the server */
   gets (request: Request = null): Observable<Word[]> {
     const param = request.paramsUrl();
     const url = param ? `${this.wordUrl}?${param}` : this.wordUrl;
-    
+
+    // Load data from cache if cache setting enabled
+    // if (this.localStorageService.cacheLocal()) {
+    //   const localData = this.localStorageService.get(fieldLocalStorage);
+    //   if ( localData ) {
+    //     return JSON.parse(localData);
+    //   }
+    // }
+
     return this.http.get<Word[]>(url)
       .pipe(
-        tap(_ => this.log('fetched words')),
+        tap(_ => {
+          if (this.localStorageService.cacheLocal()) {
+            this.localStorageService.set(fieldLocalStorage, _);
+          }
+          this.log('fetched words');
+        }),
         catchError(this.handleError('getWords', []))
       );
   }

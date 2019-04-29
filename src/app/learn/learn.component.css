@@ -15,8 +15,7 @@ li {
 }
 
 .container {
-    max-width: 100%;
-    padding: 2em;
+    padding: 0;
 }
 
 .card {

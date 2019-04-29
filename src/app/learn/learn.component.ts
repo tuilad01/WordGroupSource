@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, state, style, animate, transition, group } from '@angular/animations';
 
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { GroupService } from './../group.service';
+import { LocalStorageService } from './../local-storage.service';
 
 import { environment } from './../../environments/environment';
+
 
 @Component({
   selector: 'app-learn',
@@ -43,41 +46,48 @@ export class LearnComponent implements OnInit {
   url_word = environment.baseUrl + "/word";
   url_group = environment.baseUrl + "/group";
 
-  constructor(private http: HttpClient,
-    private route: ActivatedRoute) { }
+  fieldLocalStorageGroup = "groups";
+
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private localStorageService: LocalStorageService,
+    private groupService: GroupService
+  ) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
-    if(id) {
-      this.getGroup(id).subscribe(group => {
-        this.data = group[0]["words"].map(word => {
-          return {
-            id: word._id,
-            name: word.name,
-            mean: word.mean,
-            display: true,
-            flipped: false,
+    if (id) {
+      // Load group and word from cache if cache setting enabled
+      if (this.localStorageService.cacheLocal()) {
+        if (this.localStorageService.get(this.fieldLocalStorageGroup)) {
+          const groups = this.localStorageService.getArray(this.fieldLocalStorageGroup);
+          if (groups) {
+            const group = groups.find(d => d._id === id);
+            if (group) {
+              this.data = group.words.map(word => this.prepareModelWordCard(word));
+            }
           }
-        })
-      });
-    }    
+        }
+      } else {
+        this.groupService.get(id).subscribe(response => {
+          if(response && response.length && response[0].words && (response[0].words instanceof Array)) {
+            this.data = response[0]["words"].map(word => this.prepareModelWordCard(word));
+          }
+        });
+      }
+    }
   }
 
-  getGroup(id): Observable<any[]> {
-    return this.http.get<any[]>(`${this.url_group}?id=${id}`)
-      .pipe(
-        tap(group => this.log(`get Group by id`)),
-        catchError(this.handleError('getGroup', []))
-      );
-  }
-
-  getWords(): Observable<any[]> {
-    return this.http.get<any[]>(this.url_word)
-      .pipe(
-        tap(word => this.log(`fetched Words`)),
-        catchError(this.handleError('getWords', []))
-      );
+  private prepareModelWordCard(obj) {
+    return {
+      _id: obj._id,
+      name: obj.name,
+      mean: obj.mean,
+      display: true,
+      flipped: false
+    }
   }
 
   shuffle(array) {
@@ -124,7 +134,7 @@ export class LearnComponent implements OnInit {
   save() {
     const data = [...this.data.map(word => {
       return {
-        id: word.id,
+        _id: word._id,
         display: word.display
       };
     })]
@@ -135,7 +145,7 @@ export class LearnComponent implements OnInit {
     return this.dataTemp = [];
   }
 
-  try() { 
+  try() {
     this.tryFlipped = !this.tryFlipped;
     for (let i = 0; i < this.dataTemp.length; i++) {
       const wordTemp = this.dataTemp[i];
@@ -143,7 +153,7 @@ export class LearnComponent implements OnInit {
       for (let j = 0; j < this.data.length; j++) {
         const word = this.data[j];
 
-        if (word.id == wordTemp.id) {
+        if (word._id == wordTemp._id) {
           word.display = wordTemp.display;
           word.flipped = this.tryFlipped;
           break;
@@ -154,33 +164,8 @@ export class LearnComponent implements OnInit {
   }
 
   flipped(id) {
-    const word = this.data.find(word => word.id == id);
+    const word = this.data.find(word => word._id == id);
     word.flipped = !word.flipped;
   }
 
-  /**
-     * Handle Http operation that failed.
-     * Let the app continue.
-     * @param operation - name of the operation that failed
-     * @param result - optional value to return as the observable result
-     */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      //console.error(error); // log to console instead
-
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
-  /** Log a HeroService message with the MessageService */
-  private log(message: string) {
-    console.log(message);
-  }
 }

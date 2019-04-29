@@ -13,7 +13,7 @@
   
   <ul class="flashcard-list" >
     <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display">
-      <div class="card" (click)="flipped(word.id)" [@flipState]="word.flipped ? 'active' : 'inactive'">
+      <div class="card" (click)="flipped(word._id)" [@flipState]="word.flipped ? 'active' : 'inactive'">
         <div class="front">
             <p>{{ word.name }}</p>
             <span class="delete-card" (click)="delete(index)">X</span>

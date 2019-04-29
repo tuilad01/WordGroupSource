@@ -7,7 +7,15 @@ import { Router, ActivatedRoute } from "@angular/router";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
+
+  arrUrlPreventShownNav = [
+    "/group",
+    "/word",
+    "/setting"
+  ];
+
   url: string;
 
   constructor(private router: Router) {
@@ -22,7 +30,7 @@ export class AppComponent {
   }
 
   showNav() {
-    if (this.url !== "/group" && this.url !== "/word"){
+    if (this.arrUrlPreventShownNav.indexOf(this.url) === -1){
       return true;
     }
     return false;

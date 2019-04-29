@@ -12,12 +12,14 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { TestanimationComponent } from './testanimation/testanimation.component';
 import { WordComponent } from './word/word.component';
 import { GroupComponent } from './group/group.component';
+import { SettingComponent } from './setting/setting.component';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'learn/:id', component: LearnComponent },
   { path: 'group', component: GroupComponent },
   { path: 'word', component: WordComponent },
+  { path: 'setting', component: SettingComponent },
   {
     path: '',
     redirectTo: '/search',
@@ -35,7 +37,8 @@ const appRoutes: Routes = [
     PagenotfoundComponent,
     TestanimationComponent,
     WordComponent,
-    GroupComponent
+    GroupComponent,
+    SettingComponent
   ],
   imports: [
     BrowserModule,
