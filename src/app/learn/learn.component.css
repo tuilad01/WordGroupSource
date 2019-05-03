@@ -89,6 +89,8 @@ li:nth-child(-7n+7) .front, li:nth-child(-7n+7) .back {
     left: 0;
     top: 0;
     padding: 10px 15px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .delete-card {
