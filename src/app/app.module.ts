@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoaderInterceptorService } from './loader-interceptor.service';
 
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
@@ -13,6 +15,7 @@ import { TestanimationComponent } from './testanimation/testanimation.component'
 import { WordComponent } from './word/word.component';
 import { GroupComponent } from './group/group.component';
 import { SettingComponent } from './setting/setting.component';
+import { LoaderComponent } from './loader/loader.component';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
@@ -38,7 +41,8 @@ const appRoutes: Routes = [
     TestanimationComponent,
     WordComponent,
     GroupComponent,
-    SettingComponent
+    SettingComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +55,13 @@ const appRoutes: Routes = [
       // { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
