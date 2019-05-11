@@ -1,12 +1,16 @@
 <div class="container">
+    <!-- <div class="overflow-auto">
+        <a routerLink="/group" routerLinkActive="active" href="#" class="btn yellow float-right">Next</a>
+    </div> -->
     <div class="search-box">
-        <input class="search-input" type="text" [(ngModel)]="query" (keyup.enter)="search($event)" placeholder="search...">
+        <input class="search-input" type="text" [(ngModel)]="query" (keyup.enter)="search($event)"
+            placeholder="search...">
         <span class="icon-clear" *ngIf="query" (click)="query = ''">&times;</span>
     </div>
 
     <p class="search-key" *ngIf="query">search key: "{{ query }}"</p>
 
-    <ul class="list">        
+    <ul class="list">
         <li *ngFor="let group of data; let index = index">
             <a routerLink="/learn/{{ group._id }}"> {{ group.name}} </a>
         </li>

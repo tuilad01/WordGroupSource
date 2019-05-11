@@ -38,12 +38,11 @@ String.prototype.queryRequest = function () {
         todate: "",
         childName: "",
         childValue: "",
-        notInGroup: false,
-        notInWord: false
+        haschild: null,
     };
     const query = this.trim();
 
-    const regex_getExtend = /\[(date:|datefrom:|dateto:|groupname:|wordname:|notin)(.+?)\]/gi
+    const regex_getExtend = /\[(date:|datefrom:|dateto:|groupname:|wordname:|haschild:)(.+?)\]/gi
     const regex_query = /(.+)/gi
 
     if (!query) {
@@ -81,17 +80,8 @@ String.prototype.queryRequest = function () {
             request.childName = "wordname";
             request.childValue = result[2];
             break;
-          case "notin:":
-            switch (result[2]) {
-                case "group":                
-                    request.notInGroup = true;
-                break;
-                case "word":
-                    request.notInWord = true;
-                break;
-                default:
-                break;
-            }
+          case "haschild:":
+            request.haschild = result[2];
             break;
           default:
             break;

@@ -230,6 +230,7 @@ export class GroupComponent implements OnInit {
   }
 
   searchPrimaryList() {
+    debugger
     let request = new Request();
     const queryRequest = this.strSearchPrimaryList.queryRequest();
     for (const item in queryRequest) {

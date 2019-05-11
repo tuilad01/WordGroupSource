@@ -7,12 +7,11 @@ export class Request {
     limit?: number;
     fromdate?: string;
     todate?: string;
-    notInGroup: boolean = false;
-    notInWord: boolean = false;
+    haschild: boolean = null;
 
     paramsUrl: () => string;
 
-    constructor(name: string = "", childName: string = "", childValue: string = "", page: number = null, limit: number = 0, fromdate: string = "", todate: string = "", notInGroup: boolean = false, notInWord: boolean = false) {
+    constructor(name: string = "", childName: string = "", childValue: string = "", page: number = null, limit: number = 0, fromdate: string = "", todate: string = "", haschild: boolean = null) {
         this.name = name;
         this.childName = childName;
         this.childValue = childValue;
@@ -20,8 +19,7 @@ export class Request {
         this.limit = limit;
         this.fromdate = fromdate;
         this.todate = todate;
-        this.notInGroup = notInGroup;
-        this.notInWord = notInWord;
+        this.haschild = haschild;
         const self = this;
         self.paramsUrl = function () {
             let params = [];
@@ -41,6 +39,12 @@ export class Request {
             if (this.fromdate && this.todate) {
                 params.push(`fromdate=${this.fromdate}`);
                 params.push(`todate=${this.todate}`);
+            }
+
+            if (this.haschild === "true") {
+                params.push(`haschild=true`);
+            } else if (this.haschild === "false") {
+                params.push(`haschild=false`);
             }
 
             return params.join('&');
