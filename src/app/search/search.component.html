@@ -1,7 +1,12 @@
 <div class="container">
-    <!-- <div class="overflow-auto">
-        <a routerLink="/group" routerLinkActive="active" href="#" class="btn yellow float-right">Next</a>
-    </div> -->
+    <div class="overflow-auto">
+        <a href="#" class="btn yellow float-right button-badge" (click)="next($event)">
+            Next
+            <div *ngIf="numberWord > 0" class="badge">
+                <span>{{ numberWord }}</span>
+            </div>
+        </a>
+    </div>
     <div class="search-box">
         <input class="search-input" type="text" [(ngModel)]="query" (keyup.enter)="search($event)"
             placeholder="search...">
@@ -12,7 +17,27 @@
 
     <ul class="list">
         <li *ngFor="let group of data; let index = index">
-            <a routerLink="/learn/{{ group._id }}"> {{ group.name}} </a>
+            <div class="box" (click)="select(group)">
+                <div class="length">
+                    <b>{{ group.words.length }}</b>
+                </div>
+                <div class="detail">
+                    <div>
+                        <b> {{ group.name}}</b>
+                    </div>
+                    <div>
+                        <i>{{ group.description }}</i>
+                    </div>
+                </div>
+                <div class="select">
+                    <i *ngIf="!group.selected" class="material-icons unchecked">
+                        radio_button_unchecked
+                    </i>
+                    <i *ngIf="group.selected" class="material-icons">
+                        check_circle
+                    </i>
+                </div>
+            </div>
         </li>
     </ul>
 </div>

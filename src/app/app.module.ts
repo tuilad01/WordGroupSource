@@ -19,7 +19,7 @@ import { LoaderComponent } from './loader/loader.component';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
-  { path: 'learn/:id', component: LearnComponent },
+  { path: 'learn', component: LearnComponent },
   { path: 'group', component: GroupComponent },
   { path: 'word', component: WordComponent },
   { path: 'setting', component: SettingComponent },

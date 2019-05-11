@@ -7,8 +7,11 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { GroupService } from './../group.service';
 import { LocalStorageService } from './../local-storage.service';
+import { DataService } from './../data.service';
 
 import { environment } from './../../environments/environment';
+import { Group } from '../group';
+import { Word } from '../word';
 
 
 @Component({
@@ -37,7 +40,7 @@ import { environment } from './../../environments/environment';
 export class LearnComponent implements OnInit {
 
   speech = "";
-
+  
   dataTemp = [];
   data = [];
 
@@ -54,32 +57,38 @@ export class LearnComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private localStorageService: LocalStorageService,
-    private groupService: GroupService
+    private groupService: GroupService,
+    private dataService: DataService
   ) { }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-
-    if (id) {
-      // Load group and word from cache if cache setting enabled
-      if (this.localStorageService.cacheLocal()) {
-        if (this.localStorageService.get(this.fieldLocalStorageGroup)) {
-          const groups = this.localStorageService.getArray(this.fieldLocalStorageGroup);
-          if (groups) {
-            const group = groups.find(d => d._id === id);
-            if (group) {
-              this.data = group.words.map(word => this.prepareModelWordCard(word));
-            }
-          }
-        }
-      } else {
-        this.groupService.get(id).subscribe(response => {
-          if (response && response.length && response[0].words && (response[0].words instanceof Array)) {
-            this.data = response[0]["words"].map(word => this.prepareModelWordCard(word));
-          }
-        });
+    this.dataService.currentGroup.subscribe(group => {      
+      if (group.words instanceof Array)  {
+        this.data = group.words.map(d => this.prepareModelWordCard(d));
       }
-    }
+    });
+    // const id = this.route.snapshot.paramMap.get('id');
+
+    // if (id) {
+    //   // Load group and word from cache if cache setting enabled
+    //   if (this.localStorageService.cacheLocal()) {
+    //     if (this.localStorageService.get(this.fieldLocalStorageGroup)) {
+    //       const groups = this.localStorageService.getArray(this.fieldLocalStorageGroup);
+    //       if (groups) {
+    //         const group = groups.find(d => d._id === id);
+    //         if (group) {
+    //           this.data = group.words.map(word => this.prepareModelWordCard(word));
+    //         }
+    //       }
+    //     }
+    //   } else {
+    //     this.groupService.get(id).subscribe(response => {
+    //       if (response && response.length && response[0].words && (response[0].words instanceof Array)) {
+    //         this.data = response[0]["words"].map(word => this.prepareModelWordCard(word));
+    //       }
+    //     });
+    //   }
+    // }
   }
 
   private prepareModelWordCard(obj) {
