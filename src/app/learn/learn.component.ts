@@ -41,6 +41,7 @@ export class LearnComponent implements OnInit {
 
   speech = "";
   
+  dataTemp2 = [];
   dataTemp = [];
   data = [];
 
@@ -160,6 +161,38 @@ export class LearnComponent implements OnInit {
     this.tryFlipped = !this.tryFlipped;
     for (let i = 0; i < this.dataTemp.length; i++) {
       const wordTemp = this.dataTemp[i];
+
+      for (let j = 0; j < this.data.length; j++) {
+        const word = this.data[j];
+
+        if (word._id == wordTemp._id) {
+          word.display = wordTemp.display;
+          word.flipped = this.tryFlipped;
+          break;
+        }
+      }
+
+    }
+  }
+
+  save2() {
+    const data = [...this.data.map(word => {
+      return {
+        _id: word._id,
+        display: word.display
+      };
+    })]
+    this.dataTemp2 = data;
+  }
+
+  dispose2() {
+    return this.dataTemp2 = [];
+  }
+
+  try2() {
+    this.tryFlipped = !this.tryFlipped;
+    for (let i = 0; i < this.dataTemp2.length; i++) {
+      const wordTemp = this.dataTemp2[i];
 
       for (let j = 0; j < this.data.length; j++) {
         const word = this.data[j];

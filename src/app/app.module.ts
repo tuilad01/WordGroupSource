@@ -16,6 +16,7 @@ import { WordComponent } from './word/word.component';
 import { GroupComponent } from './group/group.component';
 import { SettingComponent } from './setting/setting.component';
 import { LoaderComponent } from './loader/loader.component';
+import { BoxComponent } from './box/box.component';
 
 const appRoutes: Routes = [
   { path: 'search', component: SearchComponent },
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
   { path: 'group', component: GroupComponent },
   { path: 'word', component: WordComponent },
   { path: 'setting', component: SettingComponent },
+  { path: 'box/:id', component: BoxComponent },
   {
     path: '',
     redirectTo: '/search',
@@ -42,7 +44,8 @@ const appRoutes: Routes = [
     WordComponent,
     GroupComponent,
     SettingComponent,
-    LoaderComponent
+    LoaderComponent,
+    BoxComponent
   ],
   imports: [
     BrowserModule,

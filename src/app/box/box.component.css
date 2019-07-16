@@ -1,12 +1,9 @@
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
 ul {
     padding-left: 0;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
 }
-
 li {
     list-style-type: none;
     padding: 10px 10px;
@@ -15,11 +12,6 @@ li {
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
 }
-
-.container {
-    padding: 0;
-}
-
 .card {
     width: 125px;
     height: 100px;
@@ -72,9 +64,6 @@ li:nth-child(4n) .front, li:nth-child(4n) .back {
 li:nth-child(5n-2) .front, li:nth-child(5n-2) .back {
     background-color: #51aae5;
 }
-/* li:nth-child(4n+1) .front, li:nth-child(4n+1) .back {
-    background-color: #2c3e50;
-} */
 
 li:nth-child(4n+4) .front, li:nth-child(4n+4) .back {
     background-color: #feca34;
@@ -108,64 +97,10 @@ li:nth-child(-7n+7) .front, li:nth-child(-7n+7) .back {
     opacity: 1;
     transform: rotate(360deg);
 }
-
-/* .flip-enter-active {
-    transition: all 0.4s ease;
-}
-
-.flip-leave-active {
-    display: none;
-}
-
-.flip-enter, .flip-leave {
-    transform: rotateY(180deg);
-    opacity: 0;
-} */
-
-/* Form */
-
-.flashcard-form {
-    position: relative;
-}
-
-label {
-    font-weight: 400;
-    color: #333;
-    margin-right: 10px;
-}
-
-input {
-    border-radius: 5px;
-    border: 2px solid #eaeaea;
-    padding: 10px;
-    outline: none;
-}
-
-.error {
-    margin-top: 10px;
-    display: block;
-    color: #e44e42;
-    font-weight: 600;
-}
-
 .hidden {
     display: none;
 }
 
-/* .flip {
-    transform: rotateY(180deg);
-    -webkit-transform: rotateY(180deg);
-}
-
-.back {
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg);
-} */
-
-/* .card {
-    transform-style: preserve-3d;
-    transform: transform 1s;
-} */
 @media (min-width: 580px) {
     .card {
         width: 250px;

@@ -4,9 +4,12 @@
 
     <a class="btn blue" (click)="random()">Random</a>
     <a class="btn green" (click)="reset()">Reset</a>
-    <a class="btn purple" (click)="save()" *ngIf="dataTemp.length <= 0">Save</a>
-    <a class="btn purple" (click)="dispose()" *ngIf="dataTemp.length > 0">Dispose</a>
-    <a class="btn yellow" (click)="try()" *ngIf="dataTemp.length > 0">Try</a>
+    <a class="btn purple" (click)="save()" *ngIf="dataTemp.length <= 0">Save 1</a>
+    <a class="btn purple" (click)="dispose()" *ngIf="dataTemp.length > 0">Dispose 1</a>
+    <a class="btn yellow" (click)="try()" *ngIf="dataTemp.length > 0">Try 1</a>
+    <a class="btn purple" (click)="save2()" *ngIf="dataTemp2.length <= 0">Save 2</a>
+    <a class="btn purple" (click)="dispose2()" *ngIf="dataTemp2.length > 0">Dispose 2</a>
+    <a class="btn yellow" (click)="try2()" *ngIf="dataTemp2.length > 0">Try 2</a>
 
     <span class="error" style="display: none;">Oops! Flashcards need a front and a back.</span>
   </div>
