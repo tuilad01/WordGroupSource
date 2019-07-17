@@ -197,66 +197,94 @@ export class LearnComponent implements OnInit {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
+  flipAll () {
+    this.tryFlipped = !this.tryFlipped;
+    this.data = this.data.map(d => {
+      d.flipped = this.tryFlipped;
+      return d;
+    });
+
+  }
+
   startState() {
-    debugger
+    this.stateData1 = this.data;
+    this.setFlipDefault();    
     this.state = 1;
+  }
+
+  doneState() {
+    // Filter word forget and remember into Arrays
+    const arrForget = this.data.filter(word => word.display);
+    const arrRemember = this.data.filter(word => !word.display);
+    
+    if (this.state === 1 || this.state === 2) {
+      // Set forget words into Array Data State 1
+      this.stateData1 = arrForget;
+
+      // Reassign data State 2
+      this.stateData2 = this.pushRemember_removeForget(this.stateData2, arrForget, arrRemember);
+
+      // Reassign data to display
+      this.data = this.state === 1 ? [...this.stateData1, ...this.stateData2] : [...this.stateData1, ...this.stateData2, ...this.stateData3];
+
+      // Flip all
+      this.setFlipDefault();
+
+      // Next state 2 or 3
+      this.state += 1;
+    } else if (this.state === 3) {
+
+      const newStateData2 = this.filterRememberbySate(arrRemember, this.stateData1);
+      const newStateData3 = this.pushRemember_removeForget_byState(this.stateData3, arrForget, arrRemember, this.stateData2);
+
+      this.stateData1 = arrForget;
+      this.stateData2 = newStateData2;
+      this.stateData3 = newStateData3;
+
+      // Reassign Data array
+      this.data = this.stateData1;
+
+      // Flip all
+      this.setFlipDefault();
+
+      // Next state 1
+      this.state = 1;
+    }
+  }
+
+  private setFlipDefault() {
     this.data = this.data.map(d => {
       d.display = true;
       d.flipped = false;
       return d;
     });
-    this.stateData1 = this.data;
+    return true;
   }
 
-  state2() {
-    this.state = 2;
+  private pushRemember_removeForget(originArr: Word[], forgetArr: Word[], rememberArr: Word[]) : Word[]{
+    let result = this.removeObjIfExist(originArr, forgetArr) as Word[];
+    result = this.pushObjIfNew(result, rememberArr) as Word[];
+    return result;
   }
 
-  state3() {
-    this.state = 3;
+  private pushRemember_removeForget_byState(originArr: Word[], forgetArr: Word[], rememberArr: Word[], state: Word[]) : Word[]{
+    let result = this.removeObjIfExist(originArr, forgetArr) as Word[];
+    const filterRememberArr = rememberArr.filter(word => state.findIndex(wrd => wrd._id === word._id) !== -1);
+    result = this.pushObjIfNew(result, filterRememberArr) as Word[];
+    return result;
   }
 
-  doneState() {
-    if (this.state === 1) {
-      this.stateData1 = this.data.filter(d => d.display === true);
-      this.stateData2 = this.data.filter(d => d.display === false);
-      const newData = [...this.stateData1, ...this.stateData2];
-      this.data = newData.map(d => {
-        d.display = true;
-        d.flipped = false;
-        return d;
-      });
-      this.state += 1;
-    } else if (this.state === 2) {
-      this.stateData1 = this.data.filter(d => d.display === true);
-      this.stateData2 = this.data.filter(d => d.display === false);
-      const newData = [...this.stateData1, ...this.stateData2, ...this.stateData3];
-      this.data = newData.map(d => {
-        d.display = true;
-        d.flipped = false;
-        return d;
-      });
-      this.state += 1;
-    } else if (this.state === 3) {
-      const remember = this.data.filter(d => d.display === false);
-      const newStateData1 = this.data.filter(d => d.display === true);
-      const newStateData2 = remember.filter(d => {
-        return this.stateData1.find(dd => dd._id === d._id);
-      });
-      const newStateData3 = remember.filter(d => {
-        return this.stateData2.find(dd => dd._id === d._id);
-      })
+  private filterRememberbySate(rememberArr: Word[], state: Word[]) : Word[]{
+    const result  = rememberArr.filter(word => state.findIndex(wrd => wrd._id === word._id) !== -1);
+    return result;
+  }
 
-      this.stateData1 = newStateData1;
-      this.stateData2 = newStateData2;
-      this.stateData3 = newStateData3;
-      // Reassign Data array
-      this.data = this.stateData1.map(d => {
-        d.display = true;
-        d.flipped = false;
-        return d;
-      });
-      this.state = 1;
-    }
+  private pushObjIfNew(originArr: any[], newArr: any[]) : any[] {
+    const arrFilter = newArr.filter(d => originArr.findIndex(dd => dd._id == d._id) === -1);
+    return [...originArr, ...arrFilter];
+  }
+  private removeObjIfExist(originArr: any[], newArr: any[]) : any[] {
+    const arrFilter = originArr.filter(d => newArr.findIndex(dd => dd._id == d._id) === -1);
+    return arrFilter;
   }
 }
