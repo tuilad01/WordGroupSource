@@ -1,35 +1,36 @@
 <div id="flashcard-app" class="container">
-  <h1></h1>
-  <div class="flashcard-form">
+    <h1></h1>
+    <div class="flashcard-form">
 
-    <a class="btn blue" (click)="random()">Random</a>
-    <a class="btn green" (click)="reset()">Reset</a>
-    <a class="btn purple" (click)="save()" *ngIf="dataTemp.length <= 0">Save 1</a>
-    <a class="btn purple" (click)="dispose()" *ngIf="dataTemp.length > 0">Dispose 1</a>
-    <a class="btn yellow" (click)="try()" *ngIf="dataTemp.length > 0">Try 1</a>
-    <a class="btn purple" (click)="save2()" *ngIf="dataTemp2.length <= 0">Save 2</a>
-    <a class="btn purple" (click)="dispose2()" *ngIf="dataTemp2.length > 0">Dispose 2</a>
-    <a class="btn yellow" (click)="try2()" *ngIf="dataTemp2.length > 0">Try 2</a>
+        <a class="btn blue" (click)="random()">Random</a>
+        <a class="btn green" (click)="reset()">Reset</a>
+        <a class="btn purple" (click)="save()" *ngIf="dataTemp.length <= 0">Save 1</a>
+        <a class="btn purple" (click)="dispose()" *ngIf="dataTemp.length > 0">Dispose 1</a>
+        <a class="btn yellow" (click)="try()" *ngIf="dataTemp.length > 0">Try 1</a>
 
-    <span class="error" style="display: none;">Oops! Flashcards need a front and a back.</span>
-  </div>
+        <a class="btn orange" (click)="startState()" *ngIf="state === 0">Start State</a>
+        <a class="btn orange" (click)="flipAll()" *ngIf="state > 0">Flip All</a>
+        <a class="btn orange" (click)="doneState()" *ngIf="state > 0">Done State {{ state }}</a>
 
-  <ul class="flashcard-list">
-    <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display">
-      <div class="card" (click)="flipped(word._id)" [@flipState]="word.flipped ? 'active' : 'inactive'">
-        <div class="front">
-          <i class="volume-icon material-icons" (click)="listen(word.name); $event.stopPropagation()">volume_up</i>
-          <p>{{ word.name }}</p>
-          <span class="delete-card" (click)="delete(index)">X</span>
-        </div>
-        <div class="back">
-          <p>{{ word.mean }}</p>
-          <span class="delete-card" (click)="delete(index)">X</span>
-        </div>
-      </div>
+        <span class="error" style="display: none;">Oops! Flashcards need a front and a back.</span>
+    </div>
 
-    </li>
+    <ul class="flashcard-list">
+        <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display">
+            <div class="card" (click)="flipped(word._id)" [@flipState]="word.flipped ? 'active' : 'inactive'">
+                <div class="front">
+                    <i class="volume-icon material-icons" (click)="listen(word.name); $event.stopPropagation()">volume_up</i>
+                    <p>{{ word.name }}</p>
+                    <span class="delete-card" (click)="delete(index)">X</span>
+                </div>
+                <div class="back">
+                    <p>{{ word.mean }}</p>
+                    <span class="delete-card" (click)="delete(index)">X</span>
+                </div>
+            </div>
 
-  </ul>
+        </li>
+
+    </ul>
 </div>
 <!-- <audio autoplay [src]="speech" class="speech" hidden></audio> -->

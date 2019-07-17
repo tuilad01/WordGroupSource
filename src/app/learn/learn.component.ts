@@ -40,8 +40,13 @@ import { Word } from '../word';
 export class LearnComponent implements OnInit {
 
   speech = "";
+
+  state = 0;
   
-  dataTemp2 = [];
+  stateData1 = [];
+  stateData2 = [];
+  stateData3 = [];
+
   dataTemp = [];
   data = [];
 
@@ -173,39 +178,7 @@ export class LearnComponent implements OnInit {
       }
 
     }
-  }
-
-  save2() {
-    const data = [...this.data.map(word => {
-      return {
-        _id: word._id,
-        display: word.display
-      };
-    })]
-    this.dataTemp2 = data;
-  }
-
-  dispose2() {
-    return this.dataTemp2 = [];
-  }
-
-  try2() {
-    this.tryFlipped = !this.tryFlipped;
-    for (let i = 0; i < this.dataTemp2.length; i++) {
-      const wordTemp = this.dataTemp2[i];
-
-      for (let j = 0; j < this.data.length; j++) {
-        const word = this.data[j];
-
-        if (word._id == wordTemp._id) {
-          word.display = wordTemp.display;
-          word.flipped = this.tryFlipped;
-          break;
-        }
-      }
-
-    }
-  }
+  }  
 
   flipped(id) {
     const word = this.data.find(word => word._id == id);
@@ -222,5 +195,68 @@ export class LearnComponent implements OnInit {
   }
   jsUcfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  startState() {
+    debugger
+    this.state = 1;
+    this.data = this.data.map(d => {
+      d.display = true;
+      d.flipped = false;
+      return d;
+    });
+    this.stateData1 = this.data;
+  }
+
+  state2() {
+    this.state = 2;
+  }
+
+  state3() {
+    this.state = 3;
+  }
+
+  doneState() {
+    if (this.state === 1) {
+      this.stateData1 = this.data.filter(d => d.display === true);
+      this.stateData2 = this.data.filter(d => d.display === false);
+      const newData = [...this.stateData1, ...this.stateData2];
+      this.data = newData.map(d => {
+        d.display = true;
+        d.flipped = false;
+        return d;
+      });
+      this.state += 1;
+    } else if (this.state === 2) {
+      this.stateData1 = this.data.filter(d => d.display === true);
+      this.stateData2 = this.data.filter(d => d.display === false);
+      const newData = [...this.stateData1, ...this.stateData2, ...this.stateData3];
+      this.data = newData.map(d => {
+        d.display = true;
+        d.flipped = false;
+        return d;
+      });
+      this.state += 1;
+    } else if (this.state === 3) {
+      const remember = this.data.filter(d => d.display === false);
+      const newStateData1 = this.data.filter(d => d.display === true);
+      const newStateData2 = remember.filter(d => {
+        return this.stateData1.find(dd => dd._id === d._id);
+      });
+      const newStateData3 = remember.filter(d => {
+        return this.stateData2.find(dd => dd._id === d._id);
+      })
+
+      this.stateData1 = newStateData1;
+      this.stateData2 = newStateData2;
+      this.stateData3 = newStateData3;
+      // Reassign Data array
+      this.data = this.stateData1.map(d => {
+        d.display = true;
+        d.flipped = false;
+        return d;
+      });
+      this.state = 1;
+    }
   }
 }
