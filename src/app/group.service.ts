@@ -51,9 +51,9 @@ export class GroupService {
     return this.http.get<Group[]>(url)
       .pipe(
         tap(_ => {
-          if (this.localStorageService.cacheLocal()) {
-            this.localStorageService.set(fieldLocalStorage, _);
-          }
+          // if (this.localStorageService.cacheLocal()) {
+          //   this.localStorageService.set(fieldLocalStorage, _);
+          // }
           this.log('fetched groups');
         }),
         catchError(this.handleError('getGroups', []))

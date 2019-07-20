@@ -48,6 +48,7 @@
 .search-key {
     letter-spacing: 2px;
     margin: 1em 0;
+    color: #fff;
 }
 
 .list {
@@ -85,7 +86,7 @@
     padding: 20px 30px;
     margin: 20px 0;
     box-shadow: 0 0px 70px -20px rgba(0, 0, 0, 0.56);
-    color: #333;
+    color: #fff;
 
     cursor: pointer;
 }
@@ -101,9 +102,6 @@
     align-items: center;
 }
 
-.button-badge {
-
-}
 .button-badge .badge {
     position: absolute;
     background-color: #c0392b;
@@ -118,6 +116,11 @@
     justify-content: center;
     align-items: center;
 }
+
+.hieght100 {
+    height: 100px;
+}
+
 /* 
 li:nth-child(-n+3) a{
     background-color: #e65f51;

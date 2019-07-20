@@ -4,9 +4,8 @@
 
         <a class="btn blue" (click)="random()">Random</a>
         <a class="btn green" (click)="reset()">Reset</a>
-        <a class="btn purple" (click)="save()" *ngIf="dataTemp.length <= 0">Save 1</a>
-        <a class="btn purple" (click)="dispose()" *ngIf="dataTemp.length > 0">Dispose 1</a>
-        <a class="btn yellow" (click)="try()" *ngIf="dataTemp.length > 0">Try 1</a>
+        <a class="btn purple" (click)="save()" *ngIf="!isLearnLocal">Save</a>
+        <a class="btn red" (click)="dispose()" *ngIf="isLearnLocal">Dispose</a>
 
         <a class="btn orange" (click)="startState()" *ngIf="state === 0">Start State</a>
         <a class="btn orange" (click)="flipAll()" *ngIf="state > 0">Flip All</a>

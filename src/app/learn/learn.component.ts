@@ -42,7 +42,7 @@ export class LearnComponent implements OnInit {
   speech = "";
 
   state = 0;
-  
+
   stateData1 = [];
   stateData2 = [];
   stateData3 = [];
@@ -59,6 +59,8 @@ export class LearnComponent implements OnInit {
 
   fieldLocalStorageGroup = "groups";
 
+  isLearnLocal = false;
+
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
@@ -68,9 +70,23 @@ export class LearnComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dataService.currentGroup.subscribe(group => {      
-      if (group.words instanceof Array)  {
-        this.data = group.words.map(d => this.prepareModelWordCard(d));
+    const learnLocal = this.localStorageService.get(environment.settings.learnLocal);
+    if (learnLocal) {
+      this.isLearnLocal = true;
+    }
+    this.dataService.currentGroup.subscribe((group: Group) => {
+      if (group && group.words && group.words.length > 0) {
+        const words = group.words as Word[];
+        this.data = words.map(d => this.prepareModelWordCard(d));
+      } else {
+        if (learnLocal) {
+          const objLearnLocal = JSON.parse(learnLocal);
+          this.data = objLearnLocal.data;
+          this.stateData1 = objLearnLocal.stateData1;
+          this.stateData2 = objLearnLocal.stateData2;
+          this.stateData3 = objLearnLocal.stateData3;
+          this.state = objLearnLocal.state;
+        }
       }
     });
     // const id = this.route.snapshot.paramMap.get('id');
@@ -149,36 +165,21 @@ export class LearnComponent implements OnInit {
   }
 
   save() {
-    const data = [...this.data.map(word => {
-      return {
-        _id: word._id,
-        display: word.display
-      };
-    })]
-    this.dataTemp = data;
+    const learnLocal = {
+      data: this.data,
+      stateData1: this.stateData1,
+      stateData2: this.stateData2,
+      stateData3: this.stateData3,
+      state: this.state
+    }
+    this.localStorageService.set(environment.settings.learnLocal, learnLocal);
+    this.isLearnLocal = true;
   }
 
   dispose() {
-    return this.dataTemp = [];
+    this.localStorageService.remove(environment.settings.learnLocal);
+    this.isLearnLocal = false;
   }
-
-  try() {
-    this.tryFlipped = !this.tryFlipped;
-    for (let i = 0; i < this.dataTemp.length; i++) {
-      const wordTemp = this.dataTemp[i];
-
-      for (let j = 0; j < this.data.length; j++) {
-        const word = this.data[j];
-
-        if (word._id == wordTemp._id) {
-          word.display = wordTemp.display;
-          word.flipped = this.tryFlipped;
-          break;
-        }
-      }
-
-    }
-  }  
 
   flipped(id) {
     const word = this.data.find(word => word._id == id);
@@ -190,14 +191,14 @@ export class LearnComponent implements OnInit {
 
     const query = arrStr.join("+");
     this.speech = `http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${query}`;
-    
+
     window.open(this.speech, '_blank');
   }
   jsUcfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  flipAll () {
+  flipAll() {
     this.tryFlipped = !this.tryFlipped;
     this.data = this.data.map(d => {
       d.flipped = this.tryFlipped;
@@ -208,7 +209,7 @@ export class LearnComponent implements OnInit {
 
   startState() {
     this.stateData1 = this.data;
-    this.setFlipDefault();    
+    this.setFlipDefault();
     this.state = 1;
   }
 
@@ -216,7 +217,7 @@ export class LearnComponent implements OnInit {
     // Filter word forget and remember into Arrays
     const arrForget = this.data.filter(word => word.display);
     const arrRemember = this.data.filter(word => !word.display);
-    
+
     if (this.state === 1 || this.state === 2) {
       // Set forget words into Array Data State 1
       this.stateData1 = arrForget;
@@ -261,29 +262,29 @@ export class LearnComponent implements OnInit {
     return true;
   }
 
-  private pushRemember_removeForget(originArr: Word[], forgetArr: Word[], rememberArr: Word[]) : Word[]{
+  private pushRemember_removeForget(originArr: Word[], forgetArr: Word[], rememberArr: Word[]): Word[] {
     let result = this.removeObjIfExist(originArr, forgetArr) as Word[];
     result = this.pushObjIfNew(result, rememberArr) as Word[];
     return result;
   }
 
-  private pushRemember_removeForget_byState(originArr: Word[], forgetArr: Word[], rememberArr: Word[], state: Word[]) : Word[]{
+  private pushRemember_removeForget_byState(originArr: Word[], forgetArr: Word[], rememberArr: Word[], state: Word[]): Word[] {
     let result = this.removeObjIfExist(originArr, forgetArr) as Word[];
     const filterRememberArr = rememberArr.filter(word => state.findIndex(wrd => wrd._id === word._id) !== -1);
     result = this.pushObjIfNew(result, filterRememberArr) as Word[];
     return result;
   }
 
-  private filterRememberbySate(rememberArr: Word[], state: Word[]) : Word[]{
-    const result  = rememberArr.filter(word => state.findIndex(wrd => wrd._id === word._id) !== -1);
+  private filterRememberbySate(rememberArr: Word[], state: Word[]): Word[] {
+    const result = rememberArr.filter(word => state.findIndex(wrd => wrd._id === word._id) !== -1);
     return result;
   }
 
-  private pushObjIfNew(originArr: any[], newArr: any[]) : any[] {
+  private pushObjIfNew(originArr: any[], newArr: any[]): any[] {
     const arrFilter = newArr.filter(d => originArr.findIndex(dd => dd._id == d._id) === -1);
     return [...originArr, ...arrFilter];
   }
-  private removeObjIfExist(originArr: any[], newArr: any[]) : any[] {
+  private removeObjIfExist(originArr: any[], newArr: any[]): any[] {
     const arrFilter = originArr.filter(d => newArr.findIndex(dd => dd._id == d._id) === -1);
     return arrFilter;
   }

@@ -48,9 +48,9 @@ export class WordService {
     return this.http.get<Word[]>(url)
       .pipe(
         tap(_ => {
-          if (this.localStorageService.cacheLocal()) {
-            this.localStorageService.set(fieldLocalStorage, _);
-          }
+          // if (this.localStorageService.cacheLocal()) {
+          //   this.localStorageService.set(fieldLocalStorage, _);
+          // }
           this.log('fetched words');
         }),
         catchError(this.handleError('getWords', []))

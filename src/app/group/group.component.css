@@ -198,6 +198,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
+    color: #fff;
 }
 
 .button-icon-clickable:active {
@@ -246,6 +247,7 @@
     bottom: 0;    
     text-align: center;
     z-index: 1;
+    color: #fff;
 }
 .header > .back-page {
     position: absolute;

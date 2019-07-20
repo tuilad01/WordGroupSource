@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
-
 import { Router, ActivatedRoute } from "@angular/router";
+
+import { LocalStorageService } from './local-storage.service';
+import { WordService } from './word.service';
+import { environment } from './../environments/environment';
+import { Request } from './request';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +22,13 @@ export class AppComponent {
 
   url: string;
 
-  constructor(private router: Router) {
+  countWord = 0;
+
+  constructor(
+    private router: Router,
+    private localStorageService: LocalStorageService,
+    private wordService: WordService
+    ) {
     this.router.events.subscribe((route: any) => {
       if (route.url) {
         this.url = route.url;
@@ -26,7 +36,19 @@ export class AppComponent {
     });
   }
 
-  ngOnInit() {  
+  ngOnInit() {
+    const wordLocal = this.localStorageService.get(environment.wordUrl);
+    if (wordLocal && wordLocal.length) {
+      this.countWord = wordLocal;
+    } else {
+      const request = new Request();
+      this.wordService.gets(request).subscribe(words => {
+        if(words && words.length) {
+          this.countWord = words.length;
+        }
+      });
+    }
+
   }
 
   showNav() {

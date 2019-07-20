@@ -9,7 +9,10 @@ export const environment = {
   wordUrl: '//192.168.1.167:4000/word',
   groupUrl: '//192.168.1.167:4000/group',
   settings: {
-    cacheLocal: "cacheLocal"
+    cacheLocal: "cacheLocal",
+    groupLocal: "groupLocal",
+    wordLocal: "wordLocal",
+    learnLocal: "learnLocal",
   }
 };
 

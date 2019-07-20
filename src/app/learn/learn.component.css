@@ -31,9 +31,9 @@ li {
     color: #fff;
     font-weight: 600;
     font-size: 13px;
-    -webkit-box-shadow: 9px 10px 22px -8px rgba(209, 193, 209, .5);
+    /* -webkit-box-shadow: 9px 10px 22px -8px rgba(209, 193, 209, .5);
     -moz-box-shadow: 9px 10px 22px -8px rgba(209, 193, 209, .5);
-    box-shadow: 9px 10px 22px -8px rgba(209, 193, 209, .5);    
+    box-shadow: 9px 10px 22px -8px rgba(209, 193, 209, .5);     */
     transform: transform 1s;
     transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;

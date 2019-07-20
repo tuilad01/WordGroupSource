@@ -5,13 +5,11 @@
 
   <nav *ngIf="showNav()">
     <a routerLink="/group" routerLinkActive="active" href="#" class="btn red">Group</a>
-    <a routerLink="/word" routerLinkActive="active" href="#" class="btn blue">Word</a>
+    <a routerLink="/word" routerLinkActive="active" href="#" class="btn blue">Word <span class="badge">{{ countWord }}</span></a>
     <a routerLink="/setting" routerLinkActive="active" href="#" class="btn purple">Setting</a>
     <a routerLink="/search" routerLinkActive="active" href="#" class="btn green">Search</a>
-    <a routerLink="/box/99" routerLinkActive="active" href="#" class="btn orange">Learn <span class="badge">4444</span></a>
-    <a routerLink="/box/1" routerLinkActive="active" href="#" class="btn orange">Box 1 <span class="badge">4444</span></a>
-    <a routerLink="/box/2" routerLinkActive="active" href="#" class="btn orange">Box 2 <span class="badge">55</span></a>
-    <a routerLink="/box/3" routerLinkActive="active" href="#" class="btn orange">Box 3 <span class="badge">1</span></a>
+    <!-- <a routerLink="/learn" routerLinkActive="active" href="#" class="btn orange">Learn</a> -->
+    <a routerLink="/box/1" routerLinkActive="active" href="#" class="btn orange">Start learn</a>
   </nav>
  
   <router-outlet></router-outlet>

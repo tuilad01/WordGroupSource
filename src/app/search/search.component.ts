@@ -26,7 +26,7 @@ export class SearchComponent implements OnInit {
 
   data = [];
 
-  private fieldLocalStorageGroup = "groups";
+  private fieldLocalStorageGroup = environment.settings.groupLocal;
 
   constructor(
     private http: HttpClient,
