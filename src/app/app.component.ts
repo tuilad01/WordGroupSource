@@ -37,9 +37,12 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    const wordLocal = this.localStorageService.get(environment.wordUrl);
-    if (wordLocal && wordLocal.length) {
-      this.countWord = wordLocal;
+    const wordLocal = this.localStorageService.get(environment.settings.wordLocal);
+    if (wordLocal) {
+      const arrWordLocal = JSON.parse(wordLocal);
+      if (arrWordLocal && arrWordLocal.length) {
+        this.countWord = arrWordLocal.length;
+      }      
     } else {
       const request = new Request();
       this.wordService.gets(request).subscribe(words => {

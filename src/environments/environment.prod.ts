@@ -5,6 +5,9 @@ export const environment = {
   wordUrl: 'https://wordgroup123.herokuapp.com/word',
   groupUrl: 'https://wordgroup123.herokuapp.com/group',
   settings: {
-    cacheLocal: "cacheLocal"
+    cacheLocal: "cacheLocal",
+    groupLocal: "groupLocal",
+    wordLocal: "wordLocal",
+    learnLocal: "learnLocal",
   }
 };

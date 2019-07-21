@@ -47,6 +47,8 @@ export class BoxComponent implements OnInit {
     // }
   ];
 
+  state = 1;
+
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
