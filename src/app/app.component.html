@@ -1,18 +1,18 @@
-
-<app-loader></app-loader>
+<app-loader>
+</app-loader>
 
 <div class="container">
 
-  <nav *ngIf="showNav()">
-    <a routerLink="/group" routerLinkActive="active" href="#" class="btn red">Group</a>
-    <a routerLink="/word" routerLinkActive="active" href="#" class="btn blue">Word <span class="badge">{{ countWord }}</span></a>
-    <a routerLink="/setting" routerLinkActive="active" href="#" class="btn purple">Setting</a>
-    <a routerLink="/search" routerLinkActive="active" href="#" class="btn green">Search</a>
-    <!-- <a routerLink="/learn" routerLinkActive="active" href="#" class="btn orange">Learn</a> -->
-    <a routerLink="/box/1" routerLinkActive="active" href="#" class="btn orange">Start learn</a>
-  </nav>
- 
-  <router-outlet></router-outlet>
+    <nav *ngIf="showNav()">
+        <a routerLink="/group" routerLinkActive="active" href="#" class="btn red">Group</a>
+        <a routerLink="/word" routerLinkActive="active" href="#" class="btn blue">Word <span class="badge">{{ countWord }}</span></a>
+        <a routerLink="/setting" routerLinkActive="active" href="#" class="btn purple">Setting</a>
+        <a routerLink="/search" routerLinkActive="active" href="#" class="btn green">Search</a>
+        <!-- <a routerLink="/learn" routerLinkActive="active" href="#" class="btn orange">Learn</a> -->
+        <a routerLink="/box" routerLinkActive="active" href="#" class="btn orange">Start</a>
+    </nav>
+
+    <router-outlet></router-outlet>
 </div>
 <!-- <router-outlet></router-outlet> -->
 <!-- <app-testanimation></app-testanimation>

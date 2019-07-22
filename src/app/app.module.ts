@@ -24,7 +24,7 @@ const appRoutes: Routes = [
   { path: 'group', component: GroupComponent },
   { path: 'word', component: WordComponent },
   { path: 'setting', component: SettingComponent },
-  { path: 'box/:id', component: BoxComponent },
+  { path: 'box', component: BoxComponent },
   {
     path: '',
     redirectTo: '/search',
