@@ -44,6 +44,7 @@ export class GroupComponent implements OnInit {
   controlMapList = {
     search: true,
     checkAll: false,
+    numberSelected: 0
   }
 
   formAdd = {
@@ -53,7 +54,8 @@ export class GroupComponent implements OnInit {
 
   formEdit = {
     name: "",
-    option: ""
+    option: "",
+    array: ""
   }
 
   strSearchPrimaryList = "";
@@ -144,6 +146,10 @@ export class GroupComponent implements OnInit {
     this.currentEditModel = obj;
     this.formEdit.name = obj.name;
     this.formEdit.option = obj[this.fieldOptionPrimary];
+    if (obj[this.fieldArrPrimary].length > 0) {
+      const array = obj[this.fieldArrPrimary].map(d => d._id).join(",");
+      this.formEdit.array = array;
+    }
 
     this.controlPrimaryList.edit = true;
   }
@@ -151,7 +157,7 @@ export class GroupComponent implements OnInit {
   edit() {
     if (!this.currentEditModel) return false;
 
-    const model = this.createModel(this.currentEditModel._id, this.formEdit.name, this.formEdit.option, "");
+    const model = this.createModel(this.currentEditModel._id, this.formEdit.name, this.formEdit.option, this.formEdit.array);
 
     this.primaryService.update(model).subscribe((response: ResultResponse) => {
       if (response && response.error.length > 0) {
@@ -230,7 +236,6 @@ export class GroupComponent implements OnInit {
   }
 
   searchPrimaryList() {
-    debugger
     let request = new Request();
     const queryRequest = this.strSearchPrimaryList.queryRequest();
     for (const item in queryRequest) {
@@ -277,7 +282,7 @@ export class GroupComponent implements OnInit {
 
       if (response && response.saved.length > 0) {
 
-        this.controlPrimaryList.map = false;
+        //this.controlPrimaryList.map = false;
         this.controlPrimaryList.more = true;
         this.controlMapList.checkAll = false;
         this.dataMap.map(d => d.selected = false);
@@ -293,6 +298,7 @@ export class GroupComponent implements OnInit {
               }
             }
           });
+          this.searchMapList();
         }
       }
     });
@@ -323,6 +329,7 @@ export class GroupComponent implements OnInit {
     } else {
       this.activeModel = this.createModel("", "", "", []);
     }
+    this.controlMapList.numberSelected = this.dataMap.filter(d => d.selected).length;
   }
 
   selectSecondList(obj: Word) { 
@@ -334,7 +341,7 @@ export class GroupComponent implements OnInit {
 
   selectMapList(obj: Word) {
     obj.selected = !obj.selected;
-
+    this.controlMapList.numberSelected = this.dataMap.filter(d => d.selected).length;
   }
 
   toggleAdd(value: boolean) {
@@ -364,10 +371,33 @@ export class GroupComponent implements OnInit {
   toggleCheckAllMapList(value: boolean) {
     this.controlMapList.checkAll = value;
     this.dataMap.map(d => d.selected = value);
+    this.controlMapList.numberSelected = this.dataMap.filter(d => d.selected).length;
   }
 
   goBack(): void {
     this.location.back();
   }
 
+  autoSelect() {
+    let maxSelect = 40;
+    
+    if (this.activeModel) {
+      maxSelect = 40 - this.activeModel[this.fieldArrPrimary].length - this.dataMap.filter(d => d.selected).length;
+    } else {
+      maxSelect = 40 - this.dataMap.filter(d => d.selected).length;
+    }
+
+    if (maxSelect <= 0) return false;
+
+    let count = 1;
+    for (let index = this.dataMap.length - 1; index > 0 ; index--) {
+      const element = this.dataMap[index];
+      if (element.selected) continue;
+      element.selected = true;
+      count += 1;
+      if (count > maxSelect) {
+        break;
+      }
+    }
+  }
 }
