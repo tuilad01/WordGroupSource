@@ -40,6 +40,7 @@ export class WordComponent implements OnInit {
   controlMapList = {
     search: true,
     checkAll: false,
+    numberSelected: 0
   }
 
   formAdd = {
@@ -49,7 +50,8 @@ export class WordComponent implements OnInit {
 
   formEdit = {
     name: "",
-    option: ""
+    option: "",
+    array: ""
   }
 
   strSearchPrimaryList = "";
@@ -212,6 +214,10 @@ export class WordComponent implements OnInit {
     this.currentEditModel = obj;
     this.formEdit.name = obj.name;
     this.formEdit.option = obj[this.fieldOptionPrimary];
+    if (obj[this.fieldArrPrimary].length > 0) {
+      const array = obj[this.fieldArrPrimary].map(d => d._id).join(",");
+      this.formEdit.array = array;
+    }
 
     this.controlPrimaryList.edit = true;
   }
@@ -219,7 +225,7 @@ export class WordComponent implements OnInit {
   edit() {
     if (!this.currentEditModel) return false;
 
-    const model = this.createModel(this.currentEditModel._id, this.formEdit.name, this.formEdit.option, "");
+    const model = this.createModel(this.currentEditModel._id, this.formEdit.name, this.formEdit.option, this.formEdit.array);
 
     this.primaryService.update(model).subscribe((response: ResultResponse) => {
       if (response && response.error.length > 0) {
@@ -344,7 +350,7 @@ export class WordComponent implements OnInit {
 
       if (response && response.saved.length > 0) {
 
-        this.controlPrimaryList.map = false;
+        //this.controlPrimaryList.map = false;
         this.controlPrimaryList.more = true;
         this.controlMapList.checkAll = false;
         this.dataMap.map(d => d.selected = false);
@@ -360,6 +366,7 @@ export class WordComponent implements OnInit {
               }
             }
           });
+          this.searchMapList();
         }
       }
     });
@@ -401,7 +408,7 @@ export class WordComponent implements OnInit {
 
   selectMapList(obj: Word) {
     obj.selected = !obj.selected;
-
+    this.controlMapList.numberSelected = this.dataMap.filter(d => d.selected).length;
   }
 
   toggleAdd(value: boolean) {
@@ -431,6 +438,7 @@ export class WordComponent implements OnInit {
   toggleCheckAllMapList(value: boolean) {
     this.controlMapList.checkAll = value;
     this.dataMap.map(d => d.selected = value);
+    this.controlMapList.numberSelected = this.dataMap.filter(d => d.selected).length;
   }
 
   goBack(): void {
