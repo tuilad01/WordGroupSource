@@ -1,21 +1,22 @@
-<a href="#" class="btn green">Random</a>
-<a href="#" class="btn blue">Save</a>
-<a href="#" class="btn orange">Done State {{ state }}</a>
+<a class="btn green" (click)="random()">Random</a>
+<a class="btn green" (click)="flipAll()">Flip all</a>
+<a class="btn orange" (click)="doneState()">Done State {{ state }}</a>
+<a class="btn blue" (click)="sync()">Sync</a>
 
 <ul class="flashcard-list">
-  <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display">
-    <div class="card" (click)="flipped(word._id)" [@flipState]="word.flipped ? 'active' : 'inactive'">
-      <div class="front">
-        <i class="volume-icon material-icons" (click)="listen(word.name); $event.stopPropagation()">volume_up</i>
-        <p>{{ word.name }}</p>
-        <span class="delete-card" (click)="delete(index)">X</span>
-      </div>
-      <div class="back">
-        <p>{{ word.mean }}</p>
-        <span class="delete-card" (click)="delete(index)">X</span>
-      </div>
-    </div>
+    <li *ngFor="let word of data; let index = index" [class.hidden]="!word.display">
+        <div class="card" (click)="flipped(word._id)" [@flipState]="word.flipped ? 'active' : 'inactive'">
+            <div class="front">
+                <i class="volume-icon material-icons" (click)="listen(word.name); $event.stopPropagation()">volume_up</i>
+                <p>{{ word.name }}</p>
+                <span class="delete-card" (click)="delete(index)">X</span>
+            </div>
+            <div class="back">
+                <p>{{ word.mean }}</p>
+                <span class="delete-card" (click)="delete(index)">X</span>
+            </div>
+        </div>
 
-  </li>
+    </li>
 
 </ul>
