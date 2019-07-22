@@ -1,30 +1,45 @@
 <div class="container">
-  <div class="header">
-    <div class="back-page">
-      <i class="material-icons button-icon button-icon-clickable" (click)="goBack()">arrow_back</i>
+    <div class="header">
+        <div class="back-page">
+            <i class="material-icons button-icon button-icon-clickable" (click)="goBack()">arrow_back</i>
+        </div>
+        <div class="title">
+            <h1>{{ title }}</h1>
+        </div>
     </div>
-    <div class="title">
-      <h1>{{ title }}</h1>
-    </div>
-  </div>
 
-  <ul class="list">
-    <li>
-      <div>
-        <p>
-          <b>Local cache</b>
-        </p>
-        <i>Aute qui sunt aliquip ullamco.</i>
-      </div>
-      <div class="text-right">
-        <label class="switch">
+    <ul class="list">
+        <li>
+            <div>
+                <p>
+                    <b>Local cache</b>
+                </p>
+                <i>Aute qui sunt aliquip ullamco.</i>
+            </div>
+            <div class="text-right">
+                <label class="switch">
           <input type="checkbox" [(ngModel)]="settings.cacheLocal.value" (change)="change()">
           <span class="slider round"></span>
         </label>
-      </div>
-    </li>
+            </div>
+        </li>
 
-    <!-- <li>
+        <li>
+            <div>
+                <p>
+                    <b>Insert new words into SYSTEMBOX1</b>
+                </p>
+                <i>Aute qui sunt aliquip ullamco.</i>
+            </div>
+            <div class="text-right">
+                <label class="switch">
+          <input type="checkbox" [(ngModel)]="isInsertNewWordSystemBox1" (change)="insertNewWordSystemBox1()">
+          <span class="slider round"></span>
+        </label>
+            </div>
+        </li>
+
+        <!-- <li>
       <div>
         <p>
           <b>Sunt aliquip</b>
@@ -49,6 +64,6 @@
         <span class="slider round"></span>
       </label>
     </li> -->
-  </ul>
+    </ul>
 
 </div>

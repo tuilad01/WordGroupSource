@@ -7,6 +7,7 @@ import { GroupService } from './../group.service';
 import { WordService } from './../word.service';
 
 import { Request } from './../request';
+import { ResultResponse } from './../resultResponse';
 
 @Component({
   selector: 'app-setting',
@@ -16,6 +17,13 @@ import { Request } from './../request';
 export class SettingComponent implements OnInit {
 
   title = "Setting";
+  
+  system = {
+    box1: "SYSTEMBOX1",
+    box2: "SYSTEMBOX2",
+    box3: "SYSTEMBOX3",
+  }
+
   
   settings = {
     cacheLocal: {
@@ -31,6 +39,8 @@ export class SettingComponent implements OnInit {
       value: []
     }
   }
+
+  isInsertNewWordSystemBox1 = false;
 
   constructor(
     private location: Location,
@@ -58,6 +68,40 @@ export class SettingComponent implements OnInit {
     }
   }
   
+  insertNewWordSystemBox1() {
+    if (!this.isInsertNewWordSystemBox1 || !this.settings.cacheLocal.value) return false;
+
+    const groups = this.localStorageService.getArray(this.settings.groupLocal.name);
+    const words = this.localStorageService.getArray(this.settings.wordLocal.name);
+
+    const systemBox1 = groups.find(d => d.name === this.system.box1);
+    
+    if (systemBox1.words.length === words.length) return false;
+
+    const systemBox2 = groups.find(d => d.name === this.system.box2);
+    const systemBox3 = groups.find(d => d.name === this.system.box3);
+
+    const mergeSysBox23 = Array.from(new Set([...systemBox2.words, ...systemBox3.words]));
+
+    const arrAppendWord = words.filter(word => mergeSysBox23.indexOf(word._id) === -1).map(word => word._id);
+
+    const data = {
+      _id: systemBox1._id,
+      words: arrAppendWord
+    }
+
+    this.wordService.link(data).subscribe((response: ResultResponse) => {
+      if (response && response.error.length > 0) {
+        console.error(response.error);
+        alert("something error!");
+      }
+
+      if (response && response.saved.length > 0) {
+        this.change();
+        this.isInsertNewWordSystemBox1 = true;
+      }
+    });
+  }
 
   goBack(): void {
     this.location.back();
