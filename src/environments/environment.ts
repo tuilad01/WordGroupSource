@@ -13,6 +13,7 @@ export const environment = {
     groupLocal: "groupLocal",
     wordLocal: "wordLocal",
     learnLocal: "learnLocal",
+    learnAllLocal: "learnAllLocal"
   }
 };
 
