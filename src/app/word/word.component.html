@@ -21,7 +21,7 @@
                     <p>{{ title }}</p>
                 </div>
                 <div>
-                    <i class="material-icons button-icon button-icon-clickable" *ngIf="controlPrimaryList.checkAll" (click)="delete()">delete</i>
+                    <i class="material-icons button-icon button-icon-clickable" *ngIf="controlPrimaryList.checkAll" (click)="multiDelete()">delete</i>
                     <i class="material-icons button-icon button-icon-clickable" [class.margin-left-1]="controlPrimaryList.checkAll" (click)="controlPrimaryList.search = !controlPrimaryList.search">search</i>
                     <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="toggleAdd(!controlPrimaryList.add)">add</i>
                     <i class="material-icons button-icon button-icon-clickable margin-left-1" (click)="controlPrimaryList.map = !controlPrimaryList.map">expand_more</i>

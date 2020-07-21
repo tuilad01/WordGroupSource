@@ -390,6 +390,28 @@ export class WordComponent implements OnInit {
     }
   }
 
+  multiDelete() {
+    const result = confirm("Are you sure!");
+    if (!result) return;
+
+    var itemsSelected = this.data.filter(d => d.selected);
+    if (itemsSelected && itemsSelected.length > 0) {
+      itemsSelected.forEach(item => {
+        this.primaryService.delete(item._id).subscribe((response: ResultResponse) => {
+          if (response && response.error.length > 0) {
+            console.error(response.error);
+            alert("something error!");
+          }
+  
+          if (response && response.saved.length > 0) {
+            this.data = this.data.filter(d => d._id !== item._id);
+          }
+        });
+      });
+    }
+
+  }
+
   selectPrimaryList (obj: Word) {
     obj.selected = !obj.selected;
     if (obj.selected) {
